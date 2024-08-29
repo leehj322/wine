@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function HomePage() {
   return (
     <div>
-      <h1 className="text-4xl">홈페이지</h1>
+      <h1 className="text-4xl bg-light-default">홈페이지</h1>
       <Link href="/myprofile">내 프로필 페이지</Link>
       <br />
       <Link href="/signin">로그인 페이지</Link>
