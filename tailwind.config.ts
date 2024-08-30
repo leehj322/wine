@@ -8,6 +8,10 @@ module.exports = {
       fontFamily: {
         sans: ["Pretendard Variable", "sans-serif"],
       },
+      screens: {
+        md: "768px",
+        xl: "1200px",
+      },
       colors: {
         light: {
           black: "#101318",
