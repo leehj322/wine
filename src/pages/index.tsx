@@ -19,11 +19,6 @@ export default function HomePage() {
       <br />
       <Link href="/oauth/signup/kakao">카카오 간편 회원가입 페이지</Link>
       <br />
-
-      <Dropdown visibility={true}>
-        <li>마이페이지</li>
-        <li>d</li>
-      </Dropdown>
     </div>
   );
 }
