@@ -1,10 +1,5 @@
-import React, {
-  useEffect,
-  useState,
-  useRef,
-  ReactNode,
-  ReactElement,
-} from "react";
+import useToggle from "@/hooks/useToggle";
+import React, { useEffect, useRef, ReactNode, ReactElement } from "react";
 
 interface Props {
   children: ReactNode;
@@ -13,19 +8,21 @@ interface Props {
 }
 
 export default function Dropdown({ buttonChildren, children, width }: Props) {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useToggle(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
+      if (!isVisible) {
+        return;
+      }
       if (
         dropdownRef.current &&
         !dropdownRef.current.contains(e.target as Node)
       ) {
-        setIsVisible(false);
+        setIsVisible();
       }
     }
-
     if (isVisible) {
       window.addEventListener("click", handleClickOutside);
     } else {
@@ -41,9 +38,8 @@ export default function Dropdown({ buttonChildren, children, width }: Props) {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => {
-          setIsVisible(!isVisible);
+          setIsVisible();
         }}
-        className="flex-end"
       >
         {React.cloneElement(buttonChildren as ReactElement)}
       </button>
@@ -63,13 +59,4 @@ export default function Dropdown({ buttonChildren, children, width }: Props) {
       )}
     </div>
   );
-}
-
-{
-  /* <div className="flex flex-col items-center justify-center">
-  <Dropdown width="w-[126px] mx-auto" buttonChildren={<div>커스텀</div>}>
-    <li>마이페이지</li>
-    <li>로그아웃</li>
-  </Dropdown>
-</div>; */
 }
