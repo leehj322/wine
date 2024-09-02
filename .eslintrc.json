@@ -30,6 +30,14 @@
     "react/jsx-props-no-spreading": "off",
     "react/require-default-props": "warn",
     "react/button-has-type": "off",
+    "@typescript-eslint/no-misused-promises": "off",
+    "@typescript-eslint/no-floating-promises": "off",
+    "jsx-a11y/label-has-associated-control": [
+      2,
+      {
+        "some": ["nesting", "id"]
+      }
+    ],
     "no-console": "off"
   }
 }

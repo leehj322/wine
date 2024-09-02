@@ -1,3 +1,3 @@
 export default function MyProfilePage() {
-  return <div>내 프로필 페이지</div>;
+  return <div>마이 프로필 페이지</div>;
 }
