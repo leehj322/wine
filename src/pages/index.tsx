@@ -1,8 +1,10 @@
 import Link from "next/link";
+import GlobalNavBar from "@/components/@shared/GlobalNavBar";
 
 export default function HomePage() {
   return (
-    <div>
+    <div className="mx-4 mt-4 max-w-[1140px] md:mx-5 md:mt-6">
+      <GlobalNavBar />
       <h1 className="bg-light-default text-4xl">홈페이지</h1>
       <Link href="/myprofile">내 프로필 페이지</Link>
       <br />
