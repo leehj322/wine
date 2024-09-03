@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
-import { ChangeEvent, FormEvent, useState } from "react";
-import axios from "@/libs/axios/axiosInstance";
-import { saveTokens } from "@/utils/authTokenStorage";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { useAuth } from "@/contexts/AuthProvider";
 
 export default function SignInPage() {
   const [formData, setFormData] = useState({
@@ -9,6 +8,7 @@ export default function SignInPage() {
     password: "",
   });
   const router = useRouter();
+  const { user, login } = useAuth();
 
   const handleFormChange = (key: string, value: string) => {
     setFormData((prev) => ({
@@ -23,42 +23,35 @@ export default function SignInPage() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    let res;
-    try {
-      res = await axios.post("auth/signin", formData);
-    } catch {
-      alert(`Error: ${res?.status}`);
-      return;
-    }
-    const tokens = {
-      accessToken: res.data.accessToken,
-      refreshToken: res.data.refreshToken,
-    };
-    saveTokens(tokens);
+    await login(formData);
     router.push("/");
   };
 
+  useEffect(() => {
+    if (user) router.push("/myprofile");
+  }, [user]);
+
   return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <label>
-          <p>이메일</p>
-          <input
-            name="email"
-            className="border border-solid"
-            onChange={handleInputChange}
-          />
-        </label>
-        <label>
-          <p>비밀번호</p>
-          <input
-            name="password"
-            className="border border-solid"
-            onChange={handleInputChange}
-          />
-        </label>
-        <button type="submit">로그인</button>
-      </form>
-    </>
+    <form onSubmit={handleSubmit}>
+      <label>
+        <p>이메일</p>
+        <input
+          name="email"
+          className="border border-solid"
+          onChange={handleInputChange}
+          value={formData.email}
+        />
+      </label>
+      <label>
+        <p>비밀번호</p>
+        <input
+          name="password"
+          className="border border-solid"
+          onChange={handleInputChange}
+          value={formData.password}
+        />
+      </label>
+      <button type="submit">로그인</button>
+    </form>
   );
 }
