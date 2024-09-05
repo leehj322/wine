@@ -57,12 +57,8 @@ module.exports = {
         },
       },
       boxShadow: {
-        light: {
-          basic: "0 2px 20px rgba(0, 0, 0, 0.04)",
-        },
-        dark: {
-          basic: "0 2px 20px rgba(255, 255, 255, 0.04)",
-        },
+        light: "0 2px 20px rgba(0, 0, 0, 0.04)",
+        dark: "0 2px 20px rgba(255, 255, 255, 0.04)",
       },
       // font 사용법 : text-3xl-32px-bold
       fontSize: {

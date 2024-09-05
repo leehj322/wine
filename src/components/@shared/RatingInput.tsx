@@ -23,7 +23,7 @@ export default function RatingInput({
   const handleMouseOut = () => setHoverRating(null);
 
   return (
-    <div className="inline-block cursor-pointer">
+    <div className="inline-block">
       <Rating
         rating={hoverRating ?? rating}
         onSelect={handleSelect}

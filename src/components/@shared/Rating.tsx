@@ -1,4 +1,4 @@
-/** 사용법 : <Rating rating={3.5} width={120} height={24} /> */
+/** 사용법 : <Rating rating={3.5} width={120} height={24} className="cursor-default" /> */
 
 import React from "react";
 
@@ -10,6 +10,7 @@ interface RatingProps {
   onSelect?: (rating: number) => void;
   onHover?: (rating: number) => void;
   onMouseOut?: () => void;
+  className?: string;
 }
 
 export default function Rating({
@@ -20,6 +21,7 @@ export default function Rating({
   onSelect,
   onHover,
   onMouseOut,
+  className,
 }: RatingProps) {
   const starWidth = width / maxRating;
   const filledWidth = (rating / maxRating) * width;
@@ -50,7 +52,7 @@ export default function Rating({
 
   return (
     <div
-      className="inline-block cursor-default"
+      className={`inline-block ${className}`}
       style={{ width: `${width}px`, height: `${height}px` }}
       aria-label="별점 평가"
       role="button"
