@@ -5,9 +5,21 @@ interface Props {
   children: ReactNode;
   width: string;
   buttonChildren: ReactNode;
+  childType?: "menu" | "wine";
 }
 
-export default function Dropdown({ buttonChildren, children, width }: Props) {
+/**
+ * Dropdown 공통 컴포넌트
+ * @param buttonChildren dropdown visible 값을 토글하는 버튼 디자인 컴포넌트
+ * @param width dropdown box의 width 값
+ * @param childType (optional) wine: 우측정렬, menu: 가운데정렬 / default: menu
+ */
+export default function Dropdown({
+  buttonChildren,
+  children,
+  width,
+  childType = "menu",
+}: Props) {
   const [isVisible, setIsVisible] = useToggle(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -35,22 +47,25 @@ export default function Dropdown({ buttonChildren, children, width }: Props) {
   }, [isVisible]);
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative inline-block" ref={dropdownRef}>
       <button
         onClick={() => {
           setIsVisible();
         }}
       >
-        {React.cloneElement(buttonChildren as ReactElement)}
+        {buttonChildren}
       </button>
       {isVisible && (
         <ul
-          className={`absolute right-0 z-50 flex h-[104px] flex-col items-center justify-center gap-1 ${width} rounded-2xl border border-light-gray-300 bg-light-white`}
+          className={`absolute right-0 top-[calc(100%+6px)] z-40 m-0 flex flex-col items-center justify-center rounded-2xl border border-light-gray-300 bg-light-white px-1 py-1 ${width}`}
         >
           {React.Children.map(children, (child) => {
             if (React.isValidElement(child)) {
               return React.cloneElement(child as ReactElement, {
-                className: `w-11/12 h-[46px] rounded-xl bg-light-white text-light-black text-lg-16px-medium flex items-center justify-center text-center rounded-md hover:bg-light-purple-10 hover:text-light-purple-100`, // li 배경색과 스타일 적용
+                className:
+                  childType === "menu"
+                    ? `flex w-full items-center justify-center rounded-xl py-2 text-md-14px-medium text-light-black hover:bg-light-purple-10 hover:text-light-purple-100 md:py-[10px] md:text-lg-16px-medium`
+                    : `flex w-full items-center rounded-xl px-4 py-2 text-md-14px-medium text-light-black hover:bg-light-purple-10 hover:text-light-purple-100 md:py-[10px] md:text-lg-16px-medium`,
               });
             }
             return child;

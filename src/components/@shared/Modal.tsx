@@ -48,7 +48,7 @@ export default function Modal({
   return (
     <div>
       {isOpen && (
-        <div className="fixed bottom-0 left-0 right-0 top-0">
+        <div className="fixed bottom-0 left-0 right-0 top-0 z-50">
           <div
             className={`absolute h-full w-full bg-light-black opacity-30 ${customDimStyle}`}
           />
