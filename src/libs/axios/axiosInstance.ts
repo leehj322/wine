@@ -18,10 +18,13 @@ axiosInstance.interceptors.response.use(
   (res) => res,
   async (error: AxiosError) => {
     const originalRequest = error.config;
-    const refreshToken = localStorage.getItem("refreshToken");
-    if (error.response?.status === 401 && refreshToken) {
+    if (
+      error.response?.status === 401 &&
+      localStorage.getItem("refreshToken")
+    ) {
       let res: AxiosResponse;
       try {
+        const refreshToken = localStorage.getItem("refreshToken");
         res = await axiosInstance.post("auth/refresh-token", {
           refreshToken,
         });
@@ -30,7 +33,7 @@ axiosInstance.interceptors.response.use(
         return Promise.reject(error);
       }
       const { accessToken }: { accessToken: string } = res.data as AuthTokens;
-      localStorage.setItem("accessToekn", accessToken);
+      localStorage.setItem("accessToken", accessToken);
       return axiosInstance(originalRequest as AxiosRequestConfig);
     }
 

@@ -19,17 +19,17 @@ type UserValue = User | null;
 interface AuthValues {
   user: UserValue;
   isPending: boolean;
-  login: (formData: SignInForm) => void;
+  login: (formData: SignInForm) => Promise<boolean>;
   logout: () => void;
-  updateMe: (formData: UpdateUserForm) => void;
+  updateMe: (formData: UpdateUserForm) => Promise<void>;
 }
 
 const INITIAL_CONTEXT_VALUES: AuthValues = {
   user: null,
   isPending: true,
-  login: () => {},
+  login: () => Promise.reject(),
   logout: () => {},
-  updateMe: () => {},
+  updateMe: () => Promise.reject(),
 };
 
 const AuthContext = createContext<AuthValues>(INITIAL_CONTEXT_VALUES);
@@ -66,8 +66,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const login = async (formData: SignInForm) => {
-    await signIn(formData);
+    const isSignInSuccess = await signIn(formData);
+    if (!isSignInSuccess) return false;
     await getMe();
+    return true;
   };
 
   const logout = () => {
@@ -76,14 +78,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const updateMe = async (formData: UpdateUserForm) => {
-    let updatedUser: UserValue = authState.user;
-    try {
-      updatedUser = await updateUser(formData);
-    } catch {
+    const updatedUser = await updateUser(formData);
+    if (!updatedUser) {
+      alert("프로필 업데이트 실패");
       return;
     }
-
-    handleAuthChange("user", updatedUser);
+    await getMe();
   };
 
   useEffect(() => {
@@ -94,7 +94,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     setAuthState({
       user: null,
-      isPending: true,
+      isPending: false,
     });
   }, []);
 

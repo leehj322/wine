@@ -6,7 +6,7 @@ export default async function updateUser(formData: UpdateUserForm) {
   const res = await axios
     .patch("users/me", formData)
     .catch((error: AxiosError) => {
-      alert(
+      console.log(
         `${error.response?.status} error from updateUser: ${error.message}`,
       );
       return null;

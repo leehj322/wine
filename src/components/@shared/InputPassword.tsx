@@ -2,9 +2,11 @@ import { InputHTMLAttributes, useState } from "react";
 import Image from "next/image";
 import Input from "./Input";
 
-export default function InputPassword({
-  ...props
-}: InputHTMLAttributes<HTMLInputElement>) {
+interface Props extends InputHTMLAttributes<HTMLInputElement> {
+  isErrored?: boolean;
+}
+
+export default function InputPassword({ isErrored = false, ...props }: Props) {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const eyeImageSrc = isPasswordVisible
     ? "/images/EyeIcon.png"
@@ -16,7 +18,11 @@ export default function InputPassword({
 
   return (
     <div className="relative w-full">
-      <Input type={isPasswordVisible ? "text" : "password"} {...props} />
+      <Input
+        type={isPasswordVisible ? "text" : "password"}
+        isErrored={isErrored}
+        {...props}
+      />
       <Image
         width={24}
         height={24}
