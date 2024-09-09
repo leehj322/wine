@@ -5,7 +5,7 @@ import WineRatingStats from "@/components/wines/WineRatingStats";
 
 export default function WineDetailPage() {
   return (
-    <div className="relative mx-auto mb-40 mt-10 w-[1140px]">
+    <div className="relative mx-auto mb-40 mt-10 w-[343px] md:w-[704px] xl:w-[1140px]">
       <GlobalNavBar />
       <WineDetailCard />
       <WineRatingStats />

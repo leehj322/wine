@@ -42,11 +42,11 @@ export default function WineFlavorList({ onChange }: WineFlavorListProps) {
   }, [selectedFlavors, onChange]);
 
   return (
-    <ul className="mt-6 flex flex-wrap items-center gap-[10px]">
+    <ul className="mt-6 flex flex-wrap items-center gap-2 md:gap-2.5">
       {FlavorList.map((Flavor) => (
         <button
           key={Flavor}
-          className={`${selectedFlavors.includes(Flavor) ? "bg-light-purple-100 text-light-white" : "bg-light-white text-light-black"} inline-block whitespace-nowrap rounded-[100px] border border-solid border-light-gray-300 px-[18px] py-[10px]`}
+          className={`${selectedFlavors.includes(Flavor) ? "bg-light-purple-100 text-light-white" : "bg-light-white text-light-black"} inline-block whitespace-nowrap rounded-[100px] border border-solid border-light-gray-300 px-2.5 py-1.5 text-md-14px-medium md:px-[18px] md:py-[10px] md:text-lg-16px-medium`}
           onClick={() => handleFlavor(Flavor)}
         >
           {Flavor}
