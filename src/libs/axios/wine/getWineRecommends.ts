@@ -1,13 +1,14 @@
+import { Wine } from "@/types/wines";
+import { AxiosResponse } from "axios";
 import axiosInstance from "../axiosInstance";
-import { Response } from "./getWines";
 
 export default async function getWineRecommends() {
   try {
-    const response = await axiosInstance.get<Response>(
-      `wines/recommended?limit=50`,
+    const response: AxiosResponse<Wine[]> = await axiosInstance.get(
+      `wines/recommended?limit=10`,
     );
 
-    const body = response.data.list ?? [];
+    const body = response.data ?? [];
 
     return body;
   } catch (error) {

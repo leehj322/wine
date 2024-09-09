@@ -79,14 +79,14 @@ export interface PostWineDetails {
 
 export interface Wine extends PostWineDetails {
   id: number;
-  avgRating: number | null;
-  reviewerCount: number | null;
+  avgRating: number;
+  reviewCount: number | null;
   recentReview: RecentReview | null;
 }
 
 export interface WineFilterProps {
   wineType: WineEnum;
   winePrice: WinePrice;
-  wineRating: string;
+  wineRating: number;
   wineName: string;
 }

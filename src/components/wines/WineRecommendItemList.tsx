@@ -2,16 +2,30 @@ import Image from "next/image";
 import { Wine } from "@/types/wines";
 import getWineRecommends from "@/libs/axios/wine/getWineRecommends";
 import { useRef, useState, useEffect } from "react";
+import MEDIA_QUERY_BREAK_POINT from "@/constants/mediaQueryBreakPoint";
+import Rating from "../@shared/Rating";
 
-function WineRecommendCard() {
+interface WineProps {
+  wine: Wine;
+}
+
+function WineRecommendCard({ wine }: WineProps) {
   return (
-    <div className="box-border flex h-[185px] w-[232px] shrink-0 rounded-2xl bg-light-white px-6 pt-6 max-[375px]:w-[193px]">
-      <div className="w-2/5">이미지</div>
+    <div className="box-border flex h-[185px] w-[232px] shrink-0 gap-4 rounded-2xl bg-light-white px-6 pt-6 max-md:w-[193px]">
+      <div className="relative w-2/5">
+        {wine.image && <Image src={wine.image} alt="와인이미지" fill />}
+      </div>
       <div className="flex w-3/5 flex-col gap-2">
-        <p className="text-4xl">4.8</p>
-        <p className="text-xs-12px-regular text-light-gray-500">
-          Palazzo della Torre 2017
+        <p className="text-4xl font-extrabold">
+          {wine.avgRating ? wine.avgRating.toFixed(1) : 0}
         </p>
+        <Rating
+          rating={wine.avgRating}
+          width={90}
+          height={18}
+          className="cursor-default"
+        />
+        <p className="text-xs-12px-regular text-light-gray-500">{wine.name}</p>
       </div>
     </div>
   );
@@ -21,14 +35,38 @@ export default function WineRecommendItemList() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [currentScrollValue, setCurrentScrollValue] = useState(0);
   const [scrollRange, setScrollRange] = useState(900);
-  const wineCards = Array(21).fill(null);
+  const [wineRecommends, setWineRecommends] = useState<Wine[]>([]);
+  const [hasWineButtons, setHasWineButtons] = useState({
+    isRightBtnVisible: false,
+    isLeftBtnVisible: false,
+  });
 
   async function fetchWines() {
     const wineRecommendList: Wine[] = await getWineRecommends(); // 추천 와인 목록 조회
-    console.log(wineRecommendList);
+    setWineRecommends(wineRecommendList);
+  }
+
+  function buttonCheck() {
+    if (!containerRef.current) {
+      return;
+    }
+    const isRightBtnVisible =
+      containerRef.current.scrollWidth >
+        containerRef.current.clientWidth + currentScrollValue + 1 &&
+      containerRef.current.clientWidth < 48 + 244 * wineRecommends.length - 20;
+
+    const isLeftBtnVisible = currentScrollValue > 0;
+
+    setHasWineButtons({ isRightBtnVisible, isLeftBtnVisible });
   }
 
   useEffect(() => {
+    fetchWines()
+      .then(() => {})
+      .catch((error) => {
+        console.error("Error during fetching data:", error);
+      });
+
     const handleScroll = () => {
       if (containerRef.current) {
         setCurrentScrollValue(containerRef.current.scrollLeft);
@@ -36,21 +74,24 @@ export default function WineRecommendItemList() {
     };
     const currentRef = containerRef.current;
     currentRef?.addEventListener("scroll", handleScroll);
-
-    fetchWines()
-      .then(() => {
-        // 성공적으로 데이터 로드
-      })
-      .catch((error) => {
-        console.error("Error during fetching data:", error);
-      });
   }, []);
 
   useEffect(() => {
+    buttonCheck();
+
+    window.addEventListener("resize", buttonCheck);
+    return () => {
+      window.removeEventListener("resize", buttonCheck);
+    };
+  }, [currentScrollValue, wineRecommends]);
+
+  useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 375) {
+      if (window.innerWidth < MEDIA_QUERY_BREAK_POINT.TABLET_MIN_WIDTH) {
         setScrollRange(210);
-      } else if (window.innerWidth < 744) {
+      } else if (
+        window.innerWidth < MEDIA_QUERY_BREAK_POINT.DESKTOP_MIN_WIDTH
+      ) {
         setScrollRange(500);
       } else {
         setScrollRange(900);
@@ -83,7 +124,7 @@ export default function WineRecommendItemList() {
           이번 달 추천 와인
         </span>
         <div className="relative">
-          {currentScrollValue > 0 && (
+          {hasWineButtons.isLeftBtnVisible && (
             <button
               type="button"
               className="absolute left-4 top-1/2 flex h-[48px] w-[48px] -translate-y-1/2 items-center justify-center rounded-full border border-solid border-light-gray-300 bg-light-white"
@@ -104,27 +145,24 @@ export default function WineRecommendItemList() {
             ref={containerRef}
             style={{ scrollBehavior: "smooth" }}
           >
-            {wineCards.map((_, index) => (
-              // eslint-disable-next-line react/no-array-index-key
-              <WineRecommendCard key={index} />
+            {wineRecommends.map((wine) => (
+              <WineRecommendCard key={wine.id} wine={wine} />
             ))}
           </div>
-          {containerRef.current &&
-            containerRef.current.scrollWidth >
-              containerRef.current.clientWidth + currentScrollValue + 1 && (
-              <button
-                type="button"
-                className="absolute right-4 top-1/2 flex h-[48px] w-[48px] -translate-y-1/2 items-center justify-center rounded-full border border-solid border-light-gray-300 bg-light-white"
-                onClick={() => handleClick("right")}
-              >
-                <Image
-                  src="/images/ic_x_scroll_right.svg"
-                  alt="arrowIcon"
-                  width={16}
-                  height={16}
-                />
-              </button>
-            )}
+          {hasWineButtons.isRightBtnVisible && (
+            <button
+              type="button"
+              className="absolute right-4 top-1/2 flex h-[48px] w-[48px] -translate-y-1/2 items-center justify-center rounded-full border border-solid border-light-gray-300 bg-light-white"
+              onClick={() => handleClick("right")}
+            >
+              <Image
+                src="/images/ic_x_scroll_right.svg"
+                alt="arrowIcon"
+                width={16}
+                height={16}
+              />
+            </button>
+          )}
         </div>
       </div>
     </div>

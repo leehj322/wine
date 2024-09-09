@@ -5,6 +5,7 @@ interface PriceRangeInputProps {
   maxPrice?: number;
   priceGap?: number;
   onPriceChange?: (min: number, max: number) => void;
+  valueReset?: boolean;
 }
 
 const DEFAULT_MIN_PRICE = 0;
@@ -29,9 +30,16 @@ export default function PriceRangeInput({
   maxPrice = DEFAULT_MAX_PRICE,
   priceGap = DEFAULT_PRICE_GAP,
   onPriceChange,
+  valueReset,
 }: PriceRangeInputProps) {
   const [minValue, setMinValue] = useState(minPrice);
   const [maxValue, setMaxValue] = useState(maxPrice);
+
+  useEffect(() => {
+    if (onPriceChange) {
+      onPriceChange(minValue, maxValue);
+    }
+  }, [minValue, maxValue]);
 
   useEffect(() => {
     const progress = document.querySelector<HTMLElement>(".slider .progress");
@@ -40,11 +48,12 @@ export default function PriceRangeInput({
       progress.style.left = `${(minValue / maxPrice) * 100}%`;
       progress.style.right = `${100 - (maxValue / maxPrice) * 100}%`;
     }
+  }, [minValue, maxValue]);
 
-    if (onPriceChange) {
-      onPriceChange(minValue, maxValue);
-    }
-  }, [minValue, maxValue, maxPrice, onPriceChange]);
+  useEffect(() => {
+    setMinValue(minPrice);
+    setMaxValue(maxPrice);
+  }, [valueReset]);
 
   const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Math.min(Number(e.target.value), maxValue - priceGap);
@@ -132,6 +141,7 @@ export default function PriceRangeInput({
 
           .min-label {
             transform: translateX(-20%);
+            top: 12px;
             left: ${(minValue / DEFAULT_MAX_PRICE) * 100}%;
           }
 

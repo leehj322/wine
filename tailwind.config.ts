@@ -13,6 +13,8 @@ module.exports = {
         "select-star": "url('/images/icon/select_star.svg')",
       },
       screens: {
+        "max-xl": { max: "1200px" },
+        "max-md": { max: "768px" },
         md: "768px",
         xl: "1200px",
       },
