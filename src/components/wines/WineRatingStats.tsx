@@ -11,8 +11,8 @@ import { WineData } from "@/types/wines";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import Image, { StaticImageData } from "next/image";
-import CloseIcon from "../../../public/images/icon/close.svg";
-import ReviewModalWine from "../../../public/images/icon/review_modal_wine.svg";
+import CloseIcon from "../../../public/images/icons/close.svg";
+import ReviewModalWine from "../../../public/images/icons/review_modal_wine.svg";
 
 function RatingChart({
   avgRatings,

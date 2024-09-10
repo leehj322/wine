@@ -11,12 +11,12 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Image, { StaticImageData } from "next/image";
 import Profiles from "../../../public/images/img_pfp_default.svg";
-import UnselectLike from "../../../public/images/icon/unselect_like.svg";
-import SelectLike from "../../../public/images/icon/select_like.svg";
-import DropdownButton from "../../../public/images/icon/dropdown_button.svg";
-import DownArrow from "../../../public/images/icon/down_arrow.svg";
-import SelectStar from "../../../public/images/icon/select_star.svg";
-import UpArrow from "../../../public/images/icon/up_arrow.svg";
+import UnselectLike from "../../../public/images/icons/unselect_like.svg";
+import SelectLike from "../../../public/images/icons/select_like.svg";
+import DropdownButton from "../../../public/images/icons/dropdown_button.svg";
+import DownArrow from "../../../public/images/icons/down_arrow.svg";
+import SelectStar from "../../../public/images/icons/select_star.svg";
+import UpArrow from "../../../public/images/icons/up_arrow.svg";
 
 export default function WinesReviewSection() {
   const [likedReviews, setLikedReviews] = useState<Record<number, boolean>>({});

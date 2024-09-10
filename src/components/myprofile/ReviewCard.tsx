@@ -168,7 +168,7 @@ export default function ReviewCard({
               <Image
                 width={20}
                 height={20}
-                src="images/icons/select_star.svg"
+                src="images/icon/select_star.svg"
                 alt="별점"
               />
               {review.rating.toFixed(1)}
@@ -182,7 +182,7 @@ export default function ReviewCard({
               <div className="relative flex h-[26px] w-[26px] items-center justify-center">
                 <Image
                   fill
-                  src="images/icons/hamburger.svg"
+                  src="images/icon/hamburger.svg"
                   alt="드롭다운 버튼"
                 />
               </div>
@@ -222,6 +222,7 @@ export default function ReviewCard({
           </div>
         </div>
       </div>
+
       <Modal isOpen={isModifyModalOpen} onClose={handleCloseModifyModal}>
         <div className="max-h-[90vh] w-[528px] overflow-y-auto rounded-2xl bg-light-white p-6">
           <div className="flex items-center justify-between">
@@ -231,7 +232,7 @@ export default function ReviewCard({
                 <Image
                   width={34}
                   height={34}
-                  src="images/icons/close.svg"
+                  src="images/icon/close.svg"
                   alt="닫기"
                 />
               </button>
@@ -242,7 +243,7 @@ export default function ReviewCard({
               <Image
                 height={68}
                 width={68}
-                src="/images/icons/review_modal_wine.svg"
+                src="/images/icon/review_modal_wine.svg"
                 alt="와인 이미지"
               />
               <div className="flex flex-col gap-2">

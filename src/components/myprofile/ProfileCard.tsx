@@ -1,6 +1,6 @@
 import Image from "next/image";
 import User, { UpdateUserForm } from "@/types/user";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import postImage from "@/libs/axios/image/postImage";
 import Button from "../@shared/Button";
 import Input from "../@shared/Input";
@@ -11,6 +11,7 @@ interface ProfileCardProps {
 }
 
 export default function ProfileCard({ user, updateMe }: ProfileCardProps) {
+  const [userEmail, setUserEmail] = useState("");
   const [nickname, setNickname] = useState(user.nickname);
   const [imagePreview, setImagePreview] = useState(
     user.image || "/images/img_pfp_default.svg",
@@ -37,6 +38,12 @@ export default function ProfileCard({ user, updateMe }: ProfileCardProps) {
       }
     }
   };
+
+  useEffect(() => {
+    const email = localStorage.getItem("userEmail");
+    if (!email) return;
+    setUserEmail(email);
+  }, []);
 
   if (!user) {
     return null;
@@ -75,7 +82,7 @@ export default function ProfileCard({ user, updateMe }: ProfileCardProps) {
               {user.nickname}
             </div>
             <div className="flex items-center justify-center text-lg-16px-regular text-light-gray-500">
-              wanda95@email.com
+              {userEmail}
             </div>
           </div>
         </div>
