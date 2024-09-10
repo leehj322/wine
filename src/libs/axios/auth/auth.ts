@@ -1,10 +1,11 @@
-import { AuthTokens, SignInForm, SignUpForm } from "@/types/auth";
+import { AuthTokens, SignInForm, SignInReturn, SignUpForm } from "@/types/auth";
 import { saveTokens } from "@/utils/authTokenStorage";
 import { AxiosError, AxiosResponse } from "axios";
+import { saveUserEmail } from "@/utils/userEmailStorage";
 import axios from "../axiosInstance";
 
 export async function signIn(formData: SignInForm) {
-  let res: AxiosResponse;
+  let res: AxiosResponse<SignInReturn>;
   try {
     res = await axios.post("auth/signin", formData);
   } catch (error: unknown) {
@@ -13,8 +14,10 @@ export async function signIn(formData: SignInForm) {
     return false;
   }
 
-  const { accessToken, refreshToken }: AuthTokens = res.data as AuthTokens;
+  const result: SignInReturn = res.data;
+  const { accessToken, refreshToken }: AuthTokens = result;
   saveTokens({ accessToken, refreshToken });
+  saveUserEmail(result.user.email);
   return true;
 }
 

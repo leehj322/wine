@@ -8,6 +8,8 @@ import Button from "@/components/@shared/Button";
 import AuthLabel from "@/components/auth/AuthLabel";
 import InputPassword from "@/components/@shared/InputPassword";
 import useAuthForm from "@/hooks/useAuthForm";
+import GoogleOauthButton from "@/components/auth/GoogleOauthButton";
+import KakaoOauthButton from "@/components/auth/KakaoOauthButton";
 
 export default function SignInPage() {
   const [loginErrorMessage, setLoginErrorMessage] = useState("");
@@ -23,9 +25,7 @@ export default function SignInPage() {
     });
     if (!isLoginSuccess) {
       setLoginErrorMessage("이메일 혹은 비밀번호를 확인해주세요.");
-      return;
     }
-    router.push("/");
   };
 
   const isFormValid =
@@ -41,7 +41,7 @@ export default function SignInPage() {
   }, [authForm.email, authForm.password]);
 
   useEffect(() => {
-    if (user) router.push("/myprofile");
+    if (user) router.push("/");
   }, [user]);
 
   return (
@@ -103,28 +103,8 @@ export default function SignInPage() {
           >
             로그인
           </Button>
-          <div className="flex h-[50px] w-full cursor-pointer items-center justify-center gap-3 rounded-2xl border border-solid border-gray-300">
-            <Image
-              src="/images/google_icon.png"
-              width={24}
-              height={24}
-              alt="구글"
-            />
-            <p className="text-lg-16px-medium text-gray-800">
-              Google로 시작하기
-            </p>
-          </div>
-          <div className="flex h-[50px] w-full cursor-pointer items-center justify-center gap-3 rounded-2xl border border-solid border-gray-300">
-            <Image
-              src="/images/kakao_icon.png"
-              width={24}
-              height={24}
-              alt="카카오"
-            />
-            <p className="text-lg-16px-medium text-gray-800">
-              kakao로 시작하기
-            </p>
-          </div>
+          <GoogleOauthButton />
+          <KakaoOauthButton />
         </div>
         <div className="flex gap-3.5">
           <span className="text-md-14px-regular text-gray-500 md:text-lg-16px-regular">
