@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { useEffect } from "react";
 import { Wine } from "@/types/wines";
 import Link from "next/link";
 import Rating from "../@shared/Rating";

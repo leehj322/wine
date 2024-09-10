@@ -1,5 +1,5 @@
-
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import postImage from "@/libs/axios/image/postImage";
 import { PostWineDetails, WineEnum } from "@/types/wines";
 import postWines from "@/libs/axios/wine/postWines";
 import Input from "../@shared/Input";
@@ -7,7 +7,6 @@ import Button from "../@shared/Button";
 import InputSelect from "../@shared/InputSelect";
 import Dropdown from "../@shared/DropDown";
 import FileInput from "../@shared/FileInput";
-import postImage from "@/libs/axios/image/postImage";
 
 interface Props {
   onClose: () => void;

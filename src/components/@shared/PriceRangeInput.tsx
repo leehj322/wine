@@ -1,3 +1,4 @@
+import useDebounce from "@/hooks/useDebounce";
 import React, { useEffect, useState } from "react";
 
 interface PriceRangeInputProps {
@@ -35,11 +36,13 @@ export default function PriceRangeInput({
   const [minValue, setMinValue] = useState(minPrice);
   const [maxValue, setMaxValue] = useState(maxPrice);
 
+  const debouncedValue = useDebounce({ minValue, maxValue }, 300);
+
   useEffect(() => {
     if (onPriceChange) {
-      onPriceChange(minValue, maxValue);
+      onPriceChange(debouncedValue.minValue, debouncedValue.maxValue);
     }
-  }, [minValue, maxValue]);
+  }, [debouncedValue.minValue, debouncedValue.maxValue]);
 
   useEffect(() => {
     const progress = document.querySelector<HTMLElement>(".slider .progress");

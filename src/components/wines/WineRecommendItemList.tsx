@@ -4,6 +4,7 @@ import getWineRecommends from "@/libs/axios/wine/getWineRecommends";
 import { useRef, useState, useEffect } from "react";
 import MEDIA_QUERY_BREAK_POINT from "@/constants/mediaQueryBreakPoint";
 import Rating from "../@shared/Rating";
+import Link from "next/link";
 
 interface WineProps {
   wine: Wine;
@@ -127,7 +128,7 @@ export default function WineRecommendItemList() {
           {hasWineButtons.isLeftBtnVisible && (
             <button
               type="button"
-              className="absolute left-4 top-1/2 flex h-[48px] w-[48px] -translate-y-1/2 items-center justify-center rounded-full border border-solid border-light-gray-300 bg-light-white"
+              className="absolute left-4 top-1/2 z-10 flex h-[48px] w-[48px] -translate-y-1/2 items-center justify-center rounded-full border border-solid border-light-gray-300 bg-light-white"
               onClick={() => handleClick("left")}
             >
               <Image
@@ -146,7 +147,9 @@ export default function WineRecommendItemList() {
             style={{ scrollBehavior: "smooth" }}
           >
             {wineRecommends.map((wine) => (
-              <WineRecommendCard key={wine.id} wine={wine} />
+              <Link key={wine.id} href={`/wines/${wine.id.toString()}`}>
+                <WineRecommendCard key={wine.id} wine={wine} />
+              </Link>
             ))}
           </div>
           {hasWineButtons.isRightBtnVisible && (
