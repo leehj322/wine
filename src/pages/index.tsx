@@ -19,7 +19,6 @@ export default function HomePage() {
           description="한 곳에서 관리하는 나만의 와인창고"
         />
       </Head>
-
       <div className="bg-light-default pb-20 pt-6">
         <header className="mx-4 max-w-[1140px] md:mx-5 xl:mx-auto">
           <GlobalNavBar />

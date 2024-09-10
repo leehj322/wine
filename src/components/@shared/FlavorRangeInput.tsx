@@ -1,8 +1,9 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 interface FlavorRangeInputProps {
   min: number;
   max: number;
+  value?: number; // 슬라이더의 초기값
   onChange?: (value: number) => void; // 슬라이더 값 변화 시 호출되는 콜백 함수
 }
 
@@ -12,11 +13,12 @@ interface FlavorRangeInputProps {
  * // (주의사항) 페이지 또는 모달에 사용할 때 width, height를 지정해준 div 태그로 감싸서 사용해주세요.
  *
  * // 사용법
- * <FlavorRangeInput min={0} max={10} onChange={(value) => console.log(value)} />
+ * <FlavorRangeInput min={0} max={10} value={5} onChange={(value) => console.log(value)} />
  */
 export default function FlavorRangeInput({
   min,
   max,
+  value = min,
   onChange,
 }: FlavorRangeInputProps) {
   const [rangeValue, setRangeValue] = useState<number>(min);
@@ -28,6 +30,10 @@ export default function FlavorRangeInput({
       onChange(newValue);
     }
   };
+
+  useEffect(() => {
+    setRangeValue(value);
+  }, [value]);
 
   return (
     <>

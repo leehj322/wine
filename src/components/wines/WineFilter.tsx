@@ -119,7 +119,6 @@ export default function WineFilter({
         wineFilterValue.winePrice.max !== max
       ) {
         // 값이 변경되었을 때만 onFilterChange 호출
-
         onFilterChange({
           ...wineFilterValue,
           winePrice: { min, max },

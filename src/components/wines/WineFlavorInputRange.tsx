@@ -5,6 +5,7 @@ export function WineFlavorInputRange({
   flavor,
   typeOne,
   typeTwo,
+  value,
   onChange,
 }: WineFlavorInputRangeProps) {
   return (
@@ -17,7 +18,7 @@ export function WineFlavorInputRange({
           {typeOne}
         </p>
         <div className="w-full">
-          <FlavorRangeInput min={0} max={10} onChange={onChange} />
+          <FlavorRangeInput min={0} max={10} value={value} onChange={onChange} />
         </div>
         <p className="min-w-[50px] text-right text-md-14px-medium text-light-gray-800 md:min-w-[56px] md:text-lg-16px-medium">
           {typeTwo}

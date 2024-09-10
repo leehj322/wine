@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 
 interface WineFlavorListProps {
+  aroma?: string[]; // 데이터로 받아온 향
   onChange: (value: string[]) => void;
 }
 
-export default function WineFlavorList({ onChange }: WineFlavorListProps) {
+export default function WineFlavorList({
+  aroma = [],
+  onChange,
+}: WineFlavorListProps) {
   const FlavorList = [
     "체리",
     "베리",
@@ -27,7 +31,7 @@ export default function WineFlavorList({ onChange }: WineFlavorListProps) {
     "가죽",
   ];
 
-  const [selectedFlavors, setSelectedFlavors] = useState<string[]>([]);
+  const [selectedFlavors, setSelectedFlavors] = useState<string[]>(aroma);
 
   const handleFlavor = (flavor: string) => {
     setSelectedFlavors((prevSelectedFlavors) =>

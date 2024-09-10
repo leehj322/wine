@@ -34,6 +34,7 @@ export interface WineFlavorInputRangeProps {
   flavor: string;
   typeOne: string;
   typeTwo: string;
+  value?: number;
   onChange?: (value: number) => void | undefined;
 }
 
