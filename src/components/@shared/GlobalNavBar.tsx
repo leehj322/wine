@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactElement } from "react";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthProvider";
 import Dropdown from "./DropDown";
@@ -12,8 +12,7 @@ function ProfileImg() {
   const handleLogoutBtnClick = () => {
     logout();
 
-    // 마이 프로필 페이지인 경우 redirection 실행
-    // 해당 코드는 myprofile 페이지에서 redirection 구현되면 제거 예정
+    // 로그아웃 시 redirection
     if (router.pathname === "/myprofile") {
       router.push("/");
     } else if (router.pathname === "/wines/[id]") {
@@ -25,22 +24,14 @@ function ProfileImg() {
     <Dropdown
       width="w-[101px] md:w-[126px]"
       buttonChildren={
-        <>
+        <div className="relative h-[30px] w-[30px] md:h-[40px] md:w-[40px]">
           <Image
-            className="inline-block rounded-full object-cover md:hidden"
-            width={30}
-            height={30}
+            className="rounded-full object-cover"
+            fill
             src={user?.image ?? "/images/img_pfp_default.svg"}
             alt="프로필 이미지"
           />
-          <Image
-            className="hidden rounded-full object-cover md:inline-block"
-            width={40}
-            height={40}
-            src={user?.image ?? "/images/img_pfp_default.svg"}
-            alt="프로필 이미지"
-          />
-        </>
+        </div>
       }
     >
       <Link href="/myprofile">마이페이지</Link>
@@ -57,16 +48,23 @@ function ProfileImg() {
  */
 export default function GlobalNavBar() {
   const { pathname } = useRouter();
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState<boolean>(false);
+  const { user, isPending } = useAuth();
 
-  // 로그인 상태 관리 (accessToken 유무로 판단)
+  // accessToken에 따라서 user profile을 띄워줄 지 로그인/회원가입 버튼을 띄워줄지 결정
   useEffect(() => {
     if (localStorage.getItem("accessToken")) {
       setIsLogin(true);
     } else {
       setIsLogin(false);
     }
-  }, [isLogin]);
+  }, [isLogin, user]);
+
+  const userApiPendingCheck = (components: ReactElement) => {
+    if (isPending) return null;
+
+    return components;
+  };
 
   return (
     <div className="flex h-[50px] w-full items-center justify-between rounded-2xl bg-light-black px-5 text-md-14px-medium text-light-white md:h-[70px] md:px-[60px] md:text-lg-16px-medium">
@@ -79,13 +77,15 @@ export default function GlobalNavBar() {
         />
       </Link>
       <div className="flex gap-5 md:gap-10">
-        {isLogin ? (
-          <ProfileImg />
-        ) : (
-          <>
-            <Link href="/signin">로그인</Link>
-            {pathname === "/" && <Link href="/signup">회원가입</Link>}
-          </>
+        {userApiPendingCheck(
+          isLogin ? (
+            <ProfileImg />
+          ) : (
+            <>
+              <Link href="/signin">로그인</Link>
+              {pathname === "/" && <Link href="/signup">회원가입</Link>}
+            </>
+          ),
         )}
       </div>
     </div>
