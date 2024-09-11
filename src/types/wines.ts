@@ -20,6 +20,7 @@ export interface WineReview {
   softAcidic: number;
   aroma: string[];
   content: string;
+  isLiked: boolean;
   createdAt: string;
   updatedAt: string;
   user: {
@@ -43,6 +44,14 @@ export interface WineFlavorRangeProps {
   typeOne: string;
   typeTwo: string;
   value?: number;
+}
+
+export interface WineReviewModalProps {
+  isOpen: boolean;
+  handleModal: () => void;
+  value?: number;
+  reviewType: string;
+  reviewName: string;
 }
 
 export enum WineEnum {

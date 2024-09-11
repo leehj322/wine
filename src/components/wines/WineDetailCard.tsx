@@ -35,10 +35,9 @@ export default function WineDetailCard() {
       <div className="flex h-[260px] w-full rounded-2xl border border-light-gray-300">
         <div className="flex h-full w-[244px] items-end justify-center">
           <Image
+            className="h-4/5"
             src={data.image}
             alt="와인 이미지"
-            layout="fixed"
-            objectFit="cover"
             width={100}
             height={260}
           />

@@ -1,10 +1,13 @@
 import axiosInstance from "../axiosInstance";
 
-export default async function postReviewById(reviewData: any) {
+export default async function patchReviewById(
+  reviewId: number,
+  reviewData: any,
+) {
   const token = localStorage.getItem("accessToken");
 
   try {
-    await axiosInstance.post("reviews", reviewData, {
+    await axiosInstance.patch(`reviews/${reviewId}`, reviewData, {
       headers: {
         accept: "application/json",
         "Content-Type": "application/json",
