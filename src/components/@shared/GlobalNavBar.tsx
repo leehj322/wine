@@ -16,7 +16,7 @@ function ProfileImg() {
     // 해당 코드는 myprofile 페이지에서 redirection 구현되면 제거 예정
     if (router.pathname === "/myprofile") {
       router.push("/");
-    } else if (pathname === "/wines/[id]") {
+    } else if (router.pathname === "/wines/[id]") {
       router.push("/");
     }
   };
