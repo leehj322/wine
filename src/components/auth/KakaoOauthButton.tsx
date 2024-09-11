@@ -24,8 +24,8 @@ export default function KakaoOauthButton() {
   const handleAuthCode = () => {
     const token = localStorage.getItem("authCode");
     if (!token) return;
+    localStorage.removeItem("authCode");
     handleSubmit(token);
-    localStorage.removeItem("authToken");
   };
 
   useEffect(() => {

@@ -25,7 +25,7 @@ export function getPasswordErrorMessage(password: string) {
   if (!password) return "비밀번호는 필수 입력입니다.";
   if (!isCorrectPassword(password))
     return "비밀번호는 숫자, 영문, 특수문자로만 가능합니다.";
-  if (password.length < 8) return "비밀번호는 최소 8자 이상입니다..";
+  if (password.length < 8) return "비밀번호는 최소 8자 이상입니다.";
   return "";
 }
 
