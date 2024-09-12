@@ -1,42 +1,11 @@
+import { MyProfileReviewData } from "@/types/review";
 import axiosInstance from "../axiosInstance";
 
-interface Review {
-  id: number;
-  rating: number;
-  lightBold: number;
-  smoothTannic: number;
-  drySweet: number;
-  softAcidic: number;
-  aroma: string[];
-  content: string;
-  createdAt: string;
-  updatedAt: string;
-  user: {
-    id: number;
-    nickname: string;
-    image: string;
-  };
-  wine: {
-    id: number;
-    name: string;
-    region: string;
-    image: string;
-    price: number;
-    avgRating: number;
-    type: string;
-  };
-}
-
-interface ReviewData {
-  totalCount: number;
-  nextCursor: number;
-  list: Review[];
-}
-
-export default async function getReviewData() {
-  const res = await axiosInstance.get<ReviewData>("users/me/reviews", {
+export default async function getReviewData(cursor?: number | null) {
+  const res = await axiosInstance.get<MyProfileReviewData>("users/me/reviews", {
     params: {
-      limit: 20,
+      limit: 5,
+      cursor,
     },
   });
   return res.data;

@@ -1,40 +1,10 @@
 import { Dispatch, SetStateAction } from "react";
+import { MyProfileWine, MyProfileWineData } from "@/types/wines";
 import WineCard from "./WineCard";
 
-interface Wine {
-  id: number;
-  name: string;
-  region: string;
-  image: string;
-  price: number;
-  type: string;
-  avgRating: number;
-  reviewCount: number;
-  recentReview: {
-    user: {
-      id: number;
-      nickname: string;
-      image: string;
-    };
-    updatedAt: string;
-    createdAt: string;
-    content: string;
-    aroma: string[];
-    rating: number;
-    id: number;
-  };
-  userId: number;
-}
-
-interface WineData {
-  totalCount: number;
-  nextCursor: number;
-  list: Wine[];
-}
-
 interface WineListProps {
-  wineData: WineData;
-  setWineData: Dispatch<SetStateAction<WineData | undefined>>;
+  wineData: MyProfileWineData;
+  setWineData: Dispatch<SetStateAction<MyProfileWineData | undefined>>;
   fetchData: () => Promise<void>;
 }
 
@@ -43,7 +13,7 @@ export default function WineList({
   setWineData,
   fetchData,
 }: WineListProps) {
-  const handleUpdateWine = (updatedWine: Wine) => {
+  const handleUpdateWine = (updatedWine: MyProfileWine) => {
     setWineData((prev) => {
       if (!prev) {
         return {
@@ -66,7 +36,7 @@ export default function WineList({
     await fetchData(); // 와인 삭제 후 데이터 다시 불러오기
   };
 
-  if (wineData.list.length === 0) {
+  if (wineData.totalCount === 0) {
     return <div>등록된 와인이 없습니다.</div>;
   }
   return (

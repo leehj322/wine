@@ -1,9 +1,10 @@
 import Image from "next/image";
 import React, { useState } from "react";
-import { WineEnum } from "@/types/wines";
+import { MyProfileWine, WineEnum } from "@/types/wines";
 import postImage from "@/libs/axios/image/postImage";
 import updateWine from "@/libs/axios/wine/patchWine";
 import deleteWine from "@/libs/axios/wine/deleteWine";
+import { useRouter } from "next/router";
 import Dropdown from "../@shared/DropDown";
 import Modal from "../@shared/Modal";
 import Button from "../@shared/Button";
@@ -11,38 +12,14 @@ import Input from "../@shared/Input";
 import FileInput from "../@shared/FileInput";
 import InputSelect from "../@shared/InputSelect";
 
-interface Wine {
-  id: number;
-  name: string;
-  region: string;
-  image: string;
-  price: number;
-  type: string;
-  avgRating: number;
-  reviewCount: number;
-  recentReview: {
-    user: {
-      id: number;
-      nickname: string;
-      image: string;
-    };
-    updatedAt: string;
-    createdAt: string;
-    content: string;
-    aroma: string[];
-    rating: number;
-    id: number;
-  };
-  userId: number;
-}
-
 interface WineCardProps {
-  wine: Wine;
-  onUpdate: (updatedWine: Wine) => void;
+  wine: MyProfileWine;
+  onUpdate: (updatedWine: MyProfileWine) => void;
   onDelete: () => void;
 }
 
 export default function WineCard({ wine, onUpdate, onDelete }: WineCardProps) {
+  const router = useRouter();
   const [isModifyModalOpen, setIsModifyModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [activeModifyButton, setActiveModifyButton] = useState(false);
@@ -124,7 +101,7 @@ export default function WineCard({ wine, onUpdate, onDelete }: WineCardProps) {
       const patchWineValue = { ...wineValue, image: imgUrl };
       console.log("patchWineValue:", patchWineValue);
       const result = await updateWine(wine.id, patchWineValue);
-      const completeWine: Wine = {
+      const completeWine: MyProfileWine = {
         ...result,
         id: wine.id,
         avgRating: wine.avgRating,
@@ -149,34 +126,40 @@ export default function WineCard({ wine, onUpdate, onDelete }: WineCardProps) {
     }
   };
 
+  const navigateToWineDetail = () => {
+    router.push(`/wines/${wine.id}`);
+  };
+
   return (
-    <div className="relative flex h-[270px] w-full flex-col-reverse">
-      <Image
-        src={wine.image}
-        className="absolute left-[60px] z-10"
-        width={76}
-        height={270}
-        alt="와인 이미지"
-      />
-      <div className="absolute left-[176px] top-[203px] z-10 flex h-[37px] w-[114px] items-center justify-center rounded-[12px] bg-light-purple-10 text-2lg-18px-bold text-light-purple-100">
+    <div className="relative mt-[16px] flex h-[185px] w-full flex-col-reverse md:mt-[20px] md:h-[270px]">
+      <button
+        onClick={navigateToWineDetail}
+        className="absolute left-[20px] z-10 h-[185px] w-[53px] md:left-[60px] md:h-[270px] md:w-[76px]"
+      >
+        <Image fill objectFit="cover" src={wine.image} alt="와인 이미지" />
+      </button>
+      <div className="absolute left-[93px] top-[133px] z-10 flex items-center justify-center rounded-[10px] bg-light-purple-10 px-[10px] py-[6px] text-md-14px-bold text-light-purple-100 md:left-[176px] md:top-[203px] md:rounded-[12px] md:px-[15px] md:py-[8px] md:text-2lg-18px-bold">
         ₩ {wine.price.toLocaleString()}
       </div>
-      <div className="absolute left-[176px] right-[40px] top-[72px] z-10 flex h-[111px] w-[584px] justify-between">
-        <div className="flex flex-col gap-[20px]">
-          <div className="text-3xl font-semibold text-light-gray-800">
+      <div className="absolute left-[93px] right-[20px] top-[41px] z-10 flex h-[87px] w-[230px] justify-between md:left-[176px] md:right-[40px] md:top-[72px] md:h-[111px] md:w-[488px] xl:w-[584px]">
+        <button
+          onClick={navigateToWineDetail}
+          className="flex w-full flex-col gap-[20px]"
+        >
+          <div className="text-[20px] font-semibold leading-[24px] text-light-gray-800 md:text-[30px] md:leading-[36px]">
             {wine.name}
           </div>
-          <div className="text-lg-16px-regular text-light-gray-500">
+          <div className="text-start text-md-14px-regular text-light-gray-500 md:text-lg-16px-regular">
             {wine.region}
           </div>
-        </div>
+        </button>
         <div className="flex flex-col">
           <Dropdown
             buttonChildren={
-              <div className="relative flex h-[26px] w-[26px] items-center justify-center">
+              <div className="relative flex h-[24px] w-[24px] items-center justify-center md:h-[26px] md:w-[26px]">
                 <Image
                   fill
-                  src="images/icon/hamburger.svg"
+                  src="images/icons/hamburger.svg"
                   alt="드롭다운 버튼"
                 />
               </div>
@@ -208,14 +191,14 @@ export default function WineCard({ wine, onUpdate, onDelete }: WineCardProps) {
           </Dropdown>
         </div>
       </div>
-      <div className="absolute top-[42px] h-[228px] w-full rounded-[16px] border border-solid border-light-gray-300 bg-light-white" />
+      <div className="absolute top-[21px] h-[164px] w-full rounded-[12px] border border-solid border-light-gray-300 bg-light-white md:top-[42px] md:h-[228px] md:rounded-[16px]" />
       <Modal isOpen={isModifyModalOpen} onClose={handleCloseModifyModal}>
-        <div className="max-h-[90vh] w-[460px] overflow-y-auto rounded-[16px] bg-light-white p-[24px]">
-          <h1 className="text-2xl-24px-bold text-light-gray-800">
+        <div className="max-h-[90vh] w-[375px] overflow-y-auto rounded-[16px] bg-light-white p-[24px]">
+          <h1 className="text-xl-20px-bold text-light-gray-800 md:text-2xl-24px-bold">
             내가 등록한 와인
           </h1>
-          <div className="mt-[40px] flex flex-col gap-[16px]">
-            <h3 className="text-lg-16px-medium text-light-gray-800">
+          <div className="mt-[32px] flex flex-col gap-[14px] md:mt-[40px] md:gap-[16px]">
+            <h3 className="text-md-14px-medium text-light-gray-800 md:text-lg-16px-medium">
               와인 이름
             </h3>
             <Input
@@ -225,8 +208,10 @@ export default function WineCard({ wine, onUpdate, onDelete }: WineCardProps) {
               onChange={handleChangeInput}
             />
           </div>
-          <div className="mt-[32px] flex flex-col gap-[16px]">
-            <h3 className="text-lg-16px-medium text-light-gray-800">가격</h3>
+          <div className="mt-[24px] flex flex-col gap-[14px] md:mt-[32px] md:gap-[16px]">
+            <h3 className="text-md-14px-medium text-light-gray-800 md:text-lg-16px-medium">
+              가격
+            </h3>
             <Input
               name="price"
               type="number"
@@ -235,8 +220,10 @@ export default function WineCard({ wine, onUpdate, onDelete }: WineCardProps) {
               onChange={handleChangeInput}
             />
           </div>
-          <div className="mt-[32px] flex flex-col gap-[16px]">
-            <h3 className="text-lg-16px-medium text-light-gray-800">원산지</h3>
+          <div className="mt-[24px] flex flex-col gap-[14px] md:mt-[32px] md:gap-[16px]">
+            <h3 className="text-md-14px-medium text-light-gray-800 md:text-lg-16px-medium">
+              원산지
+            </h3>
             <Input
               name="region"
               placeholder="원산지 입력"
@@ -244,8 +231,10 @@ export default function WineCard({ wine, onUpdate, onDelete }: WineCardProps) {
               onChange={handleChangeInput}
             />
           </div>
-          <div className="mt-[32px] flex flex-col gap-[10px]">
-            <h3 className="text-lg-16px-medium text-light-gray-800">타입</h3>
+          <div className="mt-[24px] flex flex-col gap-[10px] md:mt-[32px]">
+            <h3 className="text-md-14px-medium text-light-gray-800 md:text-lg-16px-medium">
+              타입
+            </h3>
             <Dropdown
               width="w-full"
               buttonChildren={<InputSelect placeholder={wineValue.type} />}
@@ -263,8 +252,8 @@ export default function WineCard({ wine, onUpdate, onDelete }: WineCardProps) {
               ))}
             </Dropdown>
           </div>
-          <div className="mt-[32px] flex flex-col gap-[16px]">
-            <h3 className="text-lg-16px-medium text-light-gray-800">
+          <div className="mt-[24px] flex flex-col gap-[14px] md:mt-[32px] md:gap-[16px]">
+            <h3 className="text-md-14px-medium text-light-gray-800 md:text-lg-16px-medium">
               와인 사진
             </h3>
             <FileInput
@@ -275,7 +264,7 @@ export default function WineCard({ wine, onUpdate, onDelete }: WineCardProps) {
             />
           </div>
           <div className="mt-[40px] flex w-full justify-between">
-            <div className="h-[54px] w-[108px]">
+            <div className="h-[54px] w-[96px] md:w-[108px]">
               <Button
                 type="button"
                 buttonStyle="light"
@@ -284,7 +273,7 @@ export default function WineCard({ wine, onUpdate, onDelete }: WineCardProps) {
                 취소
               </Button>
             </div>
-            <div className="h-[54px] w-[294px]">
+            <div className="h-[54px] w-[223px] md:w-[294px]">
               <Button type="button" buttonStyle="purple" onClick={handleSubmit}>
                 수정하기
               </Button>
@@ -295,7 +284,7 @@ export default function WineCard({ wine, onUpdate, onDelete }: WineCardProps) {
       <Modal isOpen={isDeleteModalOpen} onClose={handleCloseDeleteModal}>
         <div className="rounded-[16px] border border-solid border-light-gray-300 bg-light-white px-[16px] pb-[24px] pt-[32px]">
           <div className="flex w-[321px] flex-col items-center gap-[40px]">
-            <h1 className="text-xl-20px-bold text-light-gray-800">
+            <h1 className="text-2lg-18px-bold text-light-gray-800 md:text-xl-20px-bold">
               정말 삭제하시겠습니까?
             </h1>
             <div className="flex w-full justify-between">

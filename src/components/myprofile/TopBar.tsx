@@ -12,11 +12,11 @@ export default function TopBar({
   wineCount,
 }: TopBarProps) {
   return (
-    <div className="flex h-[32px] w-full flex-row justify-between">
-      <div className="flex flex-row gap-[32px]">
+    <div className="mb-[16px] flex h-[26px] w-full flex-row justify-between md:mb-[22px] md:h-[32px]">
+      <div className="flex flex-row gap-[16px] md:gap-[32px]">
         <button
           type="button"
-          className={`flex items-center justify-center text-xl-20px-bold ${
+          className={`flex items-center justify-center text-2lg-18px-bold md:text-xl-20px-bold ${
             activeTab === "reviews"
               ? "text-light-gray-800"
               : "text-light-gray-500"
@@ -27,7 +27,7 @@ export default function TopBar({
         </button>
         <button
           type="button"
-          className={`flex items-center justify-center text-xl-20px-bold ${
+          className={`flex items-center justify-center text-2lg-18px-bold md:text-xl-20px-bold ${
             activeTab === "wines"
               ? "text-light-gray-800"
               : "text-light-gray-500"
@@ -37,7 +37,7 @@ export default function TopBar({
           내가 등록한 와인
         </button>
       </div>
-      <div className="flex items-center justify-center text-md-14px-regular text-light-purple-100">
+      <div className="flex items-center justify-center text-xs-12px-regular text-light-purple-100 md:text-md-14px-regular">
         총 {activeTab === "reviews" ? reviewCount : wineCount}개
       </div>
     </div>

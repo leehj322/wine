@@ -6,119 +6,129 @@ import WineList from "@/components/myprofile/WineList";
 import { useAuth } from "@/contexts/AuthProvider";
 import getReviewData from "@/libs/axios/user/getReviewData";
 import getWineData from "@/libs/axios/user/getWineData";
-import { useEffect, useState } from "react";
-
-interface Review {
-  id: number;
-  rating: number;
-  lightBold: number;
-  smoothTannic: number;
-  drySweet: number;
-  softAcidic: number;
-  aroma: string[];
-  content: string;
-  createdAt: string;
-  updatedAt: string;
-  user: {
-    id: number;
-    nickname: string;
-    image: string;
-  };
-  wine: {
-    id: number;
-    name: string;
-    region: string;
-    image: string;
-    price: number;
-    avgRating: number;
-    type: string;
-  };
-}
-
-interface ReviewData {
-  totalCount: number;
-  nextCursor: number;
-  list: Review[];
-}
-
-interface Wine {
-  id: number;
-  name: string;
-  region: string;
-  image: string;
-  price: number;
-  type: string;
-  avgRating: number;
-  reviewCount: number;
-  recentReview: {
-    user: {
-      id: number;
-      nickname: string;
-      image: string;
-    };
-    updatedAt: string;
-    createdAt: string;
-    content: string;
-    aroma: string[];
-    rating: number;
-    id: number;
-  };
-  userId: number;
-}
-
-interface WineData {
-  totalCount: number;
-  nextCursor: number;
-  list: Wine[];
-}
+import { MyProfileReviewData } from "@/types/review";
+import { MyProfileWineData } from "@/types/wines";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export default function MyProfilePage() {
   const { user, updateMe } = useAuth(true);
-  const [wineData, setWineData] = useState<WineData | undefined>(undefined);
-  const [reviewData, setReviewData] = useState<ReviewData | undefined>(
+  const [wineData, setWineData] = useState<MyProfileWineData | undefined>(
+    undefined,
+  );
+  const [reviewData, setReviewData] = useState<MyProfileReviewData | undefined>(
     undefined,
   );
   const [activeTab, setActiveTab] = useState<"reviews" | "wines">("reviews");
+  const observer = useRef<IntersectionObserver | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const fetchData = async (): Promise<void> => {
-    if (user) {
-      try {
-        const wines = await getWineData();
-        setWineData(wines);
-      } catch (error) {
-        console.error("와인 데이터 불러오기 실패:", error);
+  const fetchData = async (
+    type: "reviews" | "wines",
+    cursor?: number,
+  ): Promise<void> => {
+    setLoading(true);
+    try {
+      if (user) {
+        if (type === "wines") {
+          const wines = await getWineData(cursor);
+          setWineData((prev) => {
+            const newList = prev ? [...prev.list, ...wines.list] : wines.list;
+            const uniqueList = Array.from(
+              new Map(newList.map((item) => [item.id, item])).values(),
+            ); // Set을 사용하여 중복 제거
+            return {
+              ...wines,
+              list: uniqueList,
+            };
+          });
+        } else {
+          const reviews = await getReviewData(cursor);
+          setReviewData((prev) => {
+            const newList = prev
+              ? [...prev.list, ...reviews.list]
+              : reviews.list;
+            const uniqueList = Array.from(
+              new Map(newList.map((item) => [item.id, item])).values(),
+            ); // Set을 사용하여 중복 제거
+            return {
+              ...reviews,
+              list: uniqueList,
+            };
+          });
+        }
       }
-
-      try {
-        const reviews = await getReviewData();
-        setReviewData(reviews);
-      } catch (error) {
-        console.error("리뷰 데이터 불러오기 실패:", error);
-      }
+    } catch (error) {
+      console.error(
+        `${type === "wines" ? "와인" : "리뷰"} 데이터 불러오기 실패:`,
+        error,
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
+  const loadMoreData = useCallback(
+    (type: "reviews" | "wines") => {
+      if (type === "reviews" && reviewData?.nextCursor) {
+        fetchData("reviews", reviewData.nextCursor);
+      } else if (type === "wines" && wineData?.nextCursor) {
+        fetchData("wines", wineData.nextCursor);
+      }
+    },
+    [reviewData, wineData],
+  );
+
   useEffect(() => {
-    fetchData();
+    fetchData("reviews");
+    fetchData("wines");
   }, [user]);
+
+  useEffect(() => {
+    if (observer.current) observer.current.disconnect();
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          loadMoreData(activeTab);
+        }
+      });
+    };
+
+    observer.current = new IntersectionObserver(observerCallback);
+    const target = document.getElementById("load-more-trigger");
+    if (target) {
+      observer.current.observe(target);
+    }
+
+    return () => {
+      if (observer.current) observer.current.disconnect();
+    };
+  }, [activeTab, reviewData, wineData]);
 
   const renderContent = () => {
     if (activeTab === "reviews" && reviewData) {
       return (
-        <ReviewList
-          reviewData={reviewData}
-          setReviewData={setReviewData}
-          fetchData={fetchData}
-        />
+        <>
+          <ReviewList
+            reviewData={reviewData}
+            setReviewData={setReviewData}
+            fetchData={() => fetchData("reviews")}
+          />
+          {loading && <div className="hidden">로딩 중...</div>}
+          <div id="load-more-trigger" className="h-px" />
+        </>
       );
     }
     if (activeTab === "wines" && wineData) {
       return (
-        <WineList
-          wineData={wineData}
-          setWineData={setWineData}
-          fetchData={fetchData}
-        />
+        <>
+          <WineList
+            wineData={wineData}
+            setWineData={setWineData}
+            fetchData={() => fetchData("wines")}
+          />
+          {loading && <div className="hidden">로딩 중...</div>}
+          <div id="load-more-trigger" className="h-px" />
+        </>
       );
     }
     return null;
@@ -130,18 +140,18 @@ export default function MyProfilePage() {
   }
 
   return (
-    <div className="flex flex-col items-center gap-[40px]">
-      <div className="h-[70px] w-[1140px]">
+    <div className="mb-[20px] mt-[20px] flex flex-col items-center gap-[20px] md:mb-[30px] md:mt-[30px] md:gap-[17px] xl:mb-[40px] xl:mt-[40px] xl:gap-[37px]">
+      <div className="w-[343px] md:w-[704px] xl:w-[1140px]">
         <GlobalNavBar />
       </div>
-      <div className="flex w-[1140px] flex-row gap-[60px]">
+      <div className="flex w-[343px] flex-col gap-[30px] md:w-[704px] md:gap-[40px] xl:w-[1140px] xl:flex-row xl:gap-[60px]">
         {user && <ProfileCard user={user} updateMe={updateMe} />}
-        <div className="flex w-[800px] flex-col gap-[40px]">
+        <div className="flex w-[343px] flex-col md:w-[704px] xl:w-[800px]">
           <TopBar
             activeTab={activeTab}
             setActiveTab={setActiveTab}
-            reviewCount={reviewData ? reviewData.list.length : 0}
-            wineCount={wineData ? wineData.list.length : 0}
+            reviewCount={reviewData ? reviewData.totalCount : 0}
+            wineCount={wineData ? wineData.totalCount : 0}
           />
           {renderContent()}
         </div>

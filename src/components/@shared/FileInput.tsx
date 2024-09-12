@@ -91,7 +91,7 @@ export default function FileInput({
               <Image
                 width={20}
                 height={20}
-                src="images/icon/close.svg"
+                src="images/icons/close.svg"
                 alt="이미지 제거 버튼"
               />
             </button>
