@@ -1,6 +1,6 @@
-import { useCallback } from "react";
-import useToggle from "@/hooks/useToggle";
-import { WineEnum, WineFilterProps } from "@/types/wines";
+import { useEffect, useState } from "react";
+import useDebounce from "@/hooks/useDebounce";
+import { WineEnum, WineFilterProps, WinePrice } from "@/types/wines";
 import PriceRangeInput from "../../@shared/PriceRangeInput";
 import Button from "../../@shared/Button";
 import WineTypeRadio from "./WineTypeRadio";
@@ -17,19 +17,24 @@ export default function WineFilter({
   onFilterChange,
   onClose,
 }: Props) {
-  const [reset, setReset] = useToggle(false);
   const wineTypes = [
     { id: 1, value: WineEnum.Red },
     { id: 2, value: WineEnum.White },
     { id: 3, value: WineEnum.Sparkling },
   ];
 
+  const [winePrice, setWinePrice] = useState<WinePrice>({
+    min: wineFilterValue.winePrice.min,
+    max: wineFilterValue.winePrice.max,
+  });
+  const debouncedWinePrice = useDebounce(winePrice, 300);
+
   const wineRatings = [
     { id: 0, value: 0, label: "전체" },
-    { id: 1, value: 5.0, label: "4.8 - 5.0" },
-    { id: 2, value: 4.8, label: "4.5 - 4.8" },
-    { id: 3, value: 4.5, label: "4.0 - 4.5" },
-    { id: 4, value: 4.0, label: "3.0 - 4.0" },
+    { id: 1, value: 5.0, label: "4.5 - 5.0" },
+    { id: 2, value: 4.5, label: "4.0 - 4.5" },
+    { id: 3, value: 4.0, label: "3.5 - 4.0" },
+    { id: 4, value: 3.5, label: "3.0 - 3.5" },
   ];
 
   const handleWineTypeChange = (value: WineEnum) => {
@@ -46,20 +51,20 @@ export default function WineFilter({
     });
   };
 
-  const handlePriceChange = useCallback(
-    (min: number, max: number) => {
-      if (
-        wineFilterValue.winePrice.min !== min ||
-        wineFilterValue.winePrice.max !== max
-      ) {
-        onFilterChange({
-          ...wineFilterValue,
-          winePrice: { min, max },
-        });
-      }
-    },
-    [onFilterChange, wineFilterValue],
-  );
+  const handlePriceChange = (min: number, max: number) => {
+    if (winePrice?.min !== min || winePrice.max !== max) {
+      setWinePrice({ min, max });
+    }
+  };
+
+  useEffect(() => {
+    if (debouncedWinePrice) {
+      onFilterChange({
+        ...wineFilterValue,
+        winePrice: debouncedWinePrice,
+      });
+    }
+  }, [debouncedWinePrice]);
 
   const handleResetClick = () => {
     onFilterChange({
@@ -69,14 +74,18 @@ export default function WineFilter({
       wineRating: 0,
     });
 
-    setReset();
+    setWinePrice({ min: 0, max: 100000 });
   };
 
   return (
-    <div className="z-50 flex w-[284px] flex-col gap-16 bg-light-white max-xl:h-[732px] max-xl:w-[375px] max-xl:rounded-3xl max-xl:p-6">
+    <div className="z-50 flex w-[284px] flex-col gap-16 bg-light-white max-xl:h-[732px] max-xl:w-[375px] max-xl:rounded-3xl max-xl:p-6 max-md:h-full max-md:w-[350px] max-md:gap-8">
       <div className="flex flex-col gap-3">
-        <p className="hidden text-2xl-24px-bold max-xl:block"> 필터</p>
-        <p className="text-xl-20px-bold"> WINE TYPES</p>
+        <p className="hidden text-2xl-24px-bold max-xl:block max-md:text-xl-20px-bold">
+          필터
+        </p>
+        <p className="text-xl-20px-bold max-md:text-lg-16px-semibold">
+          WINE TYPES
+        </p>
         <div className="flex gap-3">
           {wineTypes.map((wineType) => (
             <WineTypeRadio
@@ -90,18 +99,17 @@ export default function WineFilter({
           ))}
         </div>
       </div>
-      <div className="flex flex-col gap-6">
-        <p className="text-xl-20px-bold">PRICE</p>
+      <div className="flex flex-col gap-6 max-md:gap-0">
+        <p className="text-xl-20px-bold max-md:text-lg-16px-semibold">PRICE</p>
         <PriceRangeInput
-          minPrice={0}
-          maxPrice={100000}
           priceGap={10000}
-          onPriceChange={(min, max) => handlePriceChange(min, max)}
-          valueReset={reset}
+          onPriceChange={handlePriceChange}
+          minValue={winePrice.min}
+          maxValue={winePrice.max}
         />
       </div>
       <div className="flex flex-col gap-3">
-        <p className="text-xl-20px-bold">RATING</p>
+        <p className="text-xl-20px-bold max-md:text-lg-16px-semibold">RATING</p>
 
         {wineRatings.map((wineRating) => (
           <WineRatingRadio

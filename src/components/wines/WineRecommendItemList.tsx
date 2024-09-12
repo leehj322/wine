@@ -1,10 +1,10 @@
 import Image from "next/image";
 import { Wine } from "@/types/wines";
+import Link from "next/link";
 import getWineRecommends from "@/libs/axios/wine/getWineRecommends";
 import { useRef, useState, useEffect } from "react";
 import MEDIA_QUERY_BREAK_POINT from "@/constants/mediaQueryBreakPoint";
 import Rating from "../@shared/Rating";
-import Link from "next/link";
 
 interface WineProps {
   wine: Wine;
@@ -12,8 +12,8 @@ interface WineProps {
 
 function WineRecommendCard({ wine }: WineProps) {
   return (
-    <div className="box-border flex h-[185px] w-[232px] shrink-0 gap-4 rounded-2xl bg-light-white px-6 pt-6 max-md:w-[193px]">
-      <div className="relative w-2/5">
+    <div className="box-border flex h-[185px] w-[232px] shrink-0 gap-7 rounded-2xl bg-light-white px-6 pt-6">
+      <div className="relative w-[44px]">
         {wine.image && <Image src={wine.image} alt="와인이미지" fill />}
       </div>
       <div className="flex w-3/5 flex-col gap-2">

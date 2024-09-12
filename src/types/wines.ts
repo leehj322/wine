@@ -66,7 +66,8 @@ export enum WineEnum {
   White = "WHITE",
   Sparkling = "SPARKLING",
 }
-interface WinePrice {
+
+export interface WinePrice {
   min: number;
   max: number;
 }
