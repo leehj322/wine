@@ -5,6 +5,7 @@ import PriceRangeInput from "../../@shared/PriceRangeInput";
 import Button from "../../@shared/Button";
 import WineTypeRadio from "./WineTypeRadio";
 import WineRatingRadio from "./WineRatingRadio";
+import WinePriceRangeRadio from "./WinePrinceRangeRadio";
 
 interface Props {
   wineFilterValue: WineFilterProps;
@@ -27,6 +28,12 @@ export default function WineFilter({
     min: wineFilterValue.winePrice.min,
     max: wineFilterValue.winePrice.max,
   });
+
+  const [wineSelectedPriceRange, setWineSelectedPriceRange] = useState({
+    min: 0,
+    max: 100000,
+  });
+
   const debouncedWinePrice = useDebounce(winePrice, 300);
 
   const wineRatings = [
@@ -36,6 +43,17 @@ export default function WineFilter({
     { id: 3, value: 4.0, label: "3.5 - 4.0" },
     { id: 4, value: 3.5, label: "3.0 - 3.5" },
   ];
+
+  const winePriceRanges = [
+    { id: 0, min: 0, max: 100000, label: "0원 ~10만원" },
+    { id: 1, min: 100000, max: 1000000, label: "10만원 ~100만원" },
+    { id: 2, min: 1000000, max: 10000000, label: "10만원 ~1000만원" },
+  ];
+
+  const handleWineRangeChange = ({ min, max }: WinePrice) => {
+    setWineSelectedPriceRange({ min, max });
+    setWinePrice({ min, max }); // winePrice 상태 업데이트
+  };
 
   const handleWineTypeChange = (value: WineEnum) => {
     onFilterChange({
@@ -57,15 +75,6 @@ export default function WineFilter({
     }
   };
 
-  useEffect(() => {
-    if (debouncedWinePrice) {
-      onFilterChange({
-        ...wineFilterValue,
-        winePrice: debouncedWinePrice,
-      });
-    }
-  }, [debouncedWinePrice]);
-
   const handleResetClick = () => {
     onFilterChange({
       ...wineFilterValue,
@@ -75,11 +84,21 @@ export default function WineFilter({
     });
 
     setWinePrice({ min: 0, max: 100000 });
+    setWineSelectedPriceRange({ min: 0, max: 100000 });
   };
 
+  useEffect(() => {
+    if (debouncedWinePrice) {
+      onFilterChange({
+        ...wineFilterValue,
+        winePrice: debouncedWinePrice,
+      });
+    }
+  }, [debouncedWinePrice]);
+
   return (
-    <div className="z-50 flex w-[284px] flex-col gap-16 bg-light-white max-xl:h-[732px] max-xl:w-[375px] max-xl:rounded-3xl max-xl:p-6 max-md:h-full max-md:w-[350px] max-md:gap-8">
-      <div className="flex flex-col gap-3">
+    <div className="z-50 flex w-[284px] flex-col gap-16 bg-light-white max-xl:h-[732px] max-xl:h-full max-xl:w-[420px] max-xl:gap-8 max-xl:rounded-3xl max-xl:p-8 max-md:w-[350px] max-md:w-[375px]">
+      <div className="flex flex-col gap-3 max-md:gap-0">
         <p className="hidden text-2xl-24px-bold max-xl:block max-md:text-xl-20px-bold">
           필터
         </p>
@@ -99,16 +118,35 @@ export default function WineFilter({
           ))}
         </div>
       </div>
-      <div className="flex flex-col gap-6 max-md:gap-0">
+      <div className="flex flex-col gap-4 max-md:gap-2">
         <p className="text-xl-20px-bold max-md:text-lg-16px-semibold">PRICE</p>
+
+        <div className="flex flex-col gap-3">
+          {winePriceRanges.map((wineRange) => (
+            <WinePriceRangeRadio
+              key={wineRange.id}
+              value={{ min: wineRange.min, max: wineRange.max }}
+              selectedValue={{
+                min: wineSelectedPriceRange.min,
+                max: wineSelectedPriceRange.max,
+              }}
+              onChange={handleWineRangeChange}
+            >
+              {wineRange.label}
+            </WinePriceRangeRadio>
+          ))}
+        </div>
+
         <PriceRangeInput
           priceGap={10000}
           onPriceChange={handlePriceChange}
+          minPrice={wineSelectedPriceRange.min}
+          maxPrice={wineSelectedPriceRange.max}
           minValue={winePrice.min}
           maxValue={winePrice.max}
         />
       </div>
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 max-md:gap-1">
         <p className="text-xl-20px-bold max-md:text-lg-16px-semibold">RATING</p>
 
         {wineRatings.map((wineRating) => (

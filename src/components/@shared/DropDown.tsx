@@ -51,7 +51,7 @@ export default function Dropdown({
       <button
         className="flex w-full"
         type="button"
-        onClick={(e: React.MouseEvent) => {
+        onClick={() => {
           setIsVisible();
         }}
       >

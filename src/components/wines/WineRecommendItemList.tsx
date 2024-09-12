@@ -14,7 +14,9 @@ function WineRecommendCard({ wine }: WineProps) {
   return (
     <div className="box-border flex h-[185px] w-[232px] shrink-0 gap-7 rounded-2xl bg-light-white px-6 pt-6">
       <div className="relative w-[44px]">
-        {wine.image && <Image src={wine.image} alt="와인이미지" fill />}
+        {wine.image && (
+          <Image src={wine.image} alt="와인이미지" fill sizes="44px" />
+        )}
       </div>
       <div className="flex w-3/5 flex-col gap-2">
         <p className="text-4xl font-extrabold">

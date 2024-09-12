@@ -2,13 +2,15 @@ import React, { useEffect } from "react";
 
 interface PriceRangeInputProps {
   priceGap?: number;
+  minPrice: number;
+  maxPrice: number;
   minValue: number;
   maxValue: number;
   onPriceChange: (min: number, max: number) => void;
 }
 
-const MIN_PRICE = 0;
-const MAX_PRICE = 100000;
+// const MIN_PRICE = 0;
+// const MAX_PRICE = 100000;
 const DEFAULT_PRICE_GAP = 30000;
 
 /**
@@ -18,6 +20,7 @@ const DEFAULT_PRICE_GAP = 30000;
  *
  * // 사용법
  * <PriceRangeInput
+ *
  *    minValue={minValue}
  *    maxValue={maxValue}
  *    priceGap={30000}
@@ -26,6 +29,8 @@ const DEFAULT_PRICE_GAP = 30000;
  */
 export default function PriceRangeInput({
   priceGap = DEFAULT_PRICE_GAP,
+  minPrice,
+  maxPrice,
   minValue,
   maxValue,
   onPriceChange,
@@ -34,8 +39,11 @@ export default function PriceRangeInput({
     const progress = document.querySelector<HTMLElement>(".slider .progress");
 
     if (progress) {
-      progress.style.left = `${(minValue / MAX_PRICE) * 100}%`;
-      progress.style.right = `${100 - (maxValue / MAX_PRICE) * 100}%`;
+      const minPercent = ((minValue - minPrice) / (maxPrice - minPrice)) * 100;
+      const maxPercent = ((maxValue - minPrice) / (maxPrice - minPrice)) * 100;
+
+      progress.style.left = `${minPercent}%`;
+      progress.style.right = `${100 - maxPercent}%`;
     }
   }, [minValue, maxValue]);
 
@@ -70,8 +78,8 @@ export default function PriceRangeInput({
             <input
               type="range"
               className="range-min"
-              min={MIN_PRICE}
-              max={MAX_PRICE}
+              min={minPrice}
+              max={maxPrice}
               value={minValue}
               step={1000}
               onChange={handleMinChange}
@@ -79,8 +87,8 @@ export default function PriceRangeInput({
             <input
               type="range"
               className="range-max"
-              min={MIN_PRICE}
-              max={MAX_PRICE}
+              min={minPrice}
+              max={maxPrice}
               value={maxValue}
               step={1000}
               onChange={handleMaxChange}
@@ -130,12 +138,12 @@ export default function PriceRangeInput({
           .min-label {
             transform: translateX(-20%);
             top: 12px;
-            left: ${(minValue / MAX_PRICE) * 100}%;
+            left: ${(minValue / maxPrice) * 100}%;
           }
 
           .max-label {
             transform: translateX(-70%);
-            left: ${(maxValue / MAX_PRICE) * 100}%;
+            left: ${(maxValue / maxPrice) * 100}%;
           }
         `}
       </style>

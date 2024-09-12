@@ -11,8 +11,8 @@ import Image from "next/image";
 import useToggle from "@/hooks/useToggle";
 import Modal from "@/components/@shared/Modal";
 import AddWine from "@/components/wines/AddWine";
-import MEDIA_QUERY_BREAK_POINT from "@/constants/mediaQueryBreakPoint";
 import useDebounce from "@/hooks/useDebounce";
+import useIsMobile from "@/hooks/useIsMobile";
 
 export default function WineListPage() {
   const [wineList, setWineList] = useState<Wine[]>([]);
@@ -27,7 +27,7 @@ export default function WineListPage() {
 
   const [isAddWineModalOpen, toggleIsAddWineModalOpen] = useToggle(false);
   const [isFilterModalOpen, toggleIsFilterModalOpen] = useToggle(false);
-  const [isMobileView, setIsMobileView] = useState(false);
+
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
@@ -35,6 +35,8 @@ export default function WineListPage() {
   const loadMoreRef = useRef<HTMLDivElement | null>(null); // 스크롤 감지할 요소
 
   const debouncedWineName = useDebounce(wineName, 300); // wineName에  디바운스 적용
+
+  const isMobileView = useIsMobile();
 
   async function fetchWines() {
     if (isLoading || !hasMore) return;
@@ -48,9 +50,14 @@ export default function WineListPage() {
         debouncedWineName,
         wineCursor,
       ); // 와인 목록 조회
+
+      if (wineCursor === 0) {
+        setWineList(list);
+      } else {
+        setWineList((prevWines) => [...prevWines, ...list]);
+      }
       setWineCursor(nextCursor); // 커서 업데이트
       setHasMore(nextCursor !== null); // 커서가 null이면 더 이상 불러올 데이터가 없음 ** 추후 테스트 **
-      setWineList((prevWines) => [...prevWines, ...list]);
     } catch (error) {
       console.error("데이터 가져오기 중 오류 발생:", error);
     } finally {
@@ -87,23 +94,6 @@ export default function WineListPage() {
         });
     }
   }, [wineFilterValue, debouncedWineName]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < MEDIA_QUERY_BREAK_POINT.DESKTOP_MIN_WIDTH) {
-        setIsMobileView(true);
-      } else {
-        setIsMobileView(false);
-      }
-    };
-
-    handleResize();
-
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
 
   useEffect(() => {
     const handleIntersection = (entries: IntersectionObserverEntry[]) => {
@@ -231,7 +221,9 @@ export default function WineListPage() {
         <div
           ref={loadMoreRef}
           className={wineList.length === 0 ? "hidden" : "block h-[1px]"}
-        />
+        >
+          a
+        </div>
       </div>
     </div>
   );

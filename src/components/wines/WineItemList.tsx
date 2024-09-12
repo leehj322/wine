@@ -57,7 +57,9 @@ function WineItemCard({ wine }: WineProps) {
       <div className="flex h-2/3 flex-row border-b px-12 max-md:px-5">
         <div className="flex w-1/5 items-end justify-center pr-4 max-md:w-1/3">
           <div className="relative h-5/6 w-[60px]">
-            {wine.image && <Image src={wine.image} alt="와인이미지" fill />}
+            {wine.image && (
+              <Image src={wine.image} alt="와인이미지" fill sizes="60px" />
+            )}
           </div>
         </div>
         <div className="flex w-4/5 flex-row justify-between py-9 max-md:flex-col max-md:justify-around max-md:py-6">
