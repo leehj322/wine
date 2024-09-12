@@ -1,3 +1,5 @@
+import { Router } from "next/router";
+
 export interface WineData {
   id: number;
   name: string;
@@ -52,6 +54,11 @@ export interface WineReviewModalProps {
   value?: number;
   reviewType: string;
   reviewName: string;
+}
+
+export interface WineIdDataProps {
+  router?: Router;
+  data: WineData;
 }
 
 export enum WineEnum {

@@ -1,8 +1,6 @@
 import { WineFlavorRange } from "@/components/wines/WineFlavorInputRange";
 import Dropdown from "@/components/@shared/DropDown";
-import { WineData, WineReview } from "@/types/wines";
-import getWineById from "@/libs/axios/wine/getWineById";
-import getReviewById from "@/libs/axios/review/getReviewById";
+import { WineIdDataProps } from "@/types/wines";
 import deleteReviewById from "@/libs/axios/review/deleteReviewById";
 import timeAgo from "@/utils/TimeAgo";
 import { translateAromaReverse } from "@/components/wines/TranslateAroma";
@@ -13,7 +11,6 @@ import deleteLikeById from "@/libs/axios/review/deleteLikeById";
 import debounce from "@/utils/debounce";
 import { useAuth } from "@/contexts/AuthProvider";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import Image, { StaticImageData } from "next/image";
 import Profiles from "../../../public/images/img_pfp_default.svg";
 import UnselectLike from "../../../public/images/icons/unselect_like.svg";
@@ -23,19 +20,15 @@ import DownArrow from "../../../public/images/icons/down_arrow.svg";
 import SelectStar from "../../../public/images/icons/select_star.svg";
 import UpArrow from "../../../public/images/icons/up_arrow.svg";
 
-export default function WinesReviewSection() {
+export default function WinesReviewSection({data}: WineIdDataProps) {
   const [likedReviews, setLikedReviews] = useState<Record<number, boolean>>({});
   const [expandedReviews, setExpandedReviews] = useState<
     Record<number, boolean>
   >({});
-  const [reviews, setReviews] = useState<WineReview[]>([]);
-  const [wineData, setWineData] = useState<WineData | null>(null);
   const [visibleReviews, setVisibleReviews] = useState(5);
   const [loading, setLoading] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState<Record<number, boolean>>({});
   const [isPatchOpen, setIsPatchOpen] = useState<Record<number, boolean>>({});
-  const router = useRouter();
-  const { id } = router.query;
   const { user } = useAuth();
 
   const handleToggle = (reviewId: number) => {
@@ -93,31 +86,6 @@ export default function WinesReviewSection() {
   }, 300);
 
   useEffect(() => {
-    const getData = async () => {
-      if (typeof id === "string") {
-        try {
-          const wineData: WineData = await getWineById(id);
-          setWineData(wineData);
-
-          if (wineData.reviews.length > 0) {
-            const reviewPromises = wineData.reviews.map((review) =>
-              getReviewById(review.id),
-            );
-            const reviewsData: WineReview[] = await Promise.all(reviewPromises);
-            setReviews(reviewsData);
-          } else {
-            console.error("리뷰 ID를 찾을 수 없습니다.");
-          }
-        } catch (e) {
-          console.error("데이터를 불러오는데 오류가 있습니다:", e);
-        }
-      }
-    };
-
-    getData();
-  }, [id]);
-
-  useEffect(() => {
     const loadMoreReviews = () => {
       setLoading(true);
       setTimeout(() => {
@@ -152,7 +120,7 @@ export default function WinesReviewSection() {
       <h2 className="mt-[60px] hidden text-xl-20px-bold text-light-gray-800 md:inline-block">
         리뷰 목록
       </h2>
-      {wineData && wineData.reviews.length === 0 ? (
+      {data && data.reviews.length === 0 ? (
         <>
           <h2 className="text-xl-20px-bold text-light-gray-800 md:hidden">
             리뷰 목록
@@ -167,7 +135,7 @@ export default function WinesReviewSection() {
           </div>
         </>
       ) : (
-        reviews.slice(0, visibleReviews).map((review) => {
+        data.reviews.slice(0, visibleReviews).map((review) => {
           const translatedAromas = translateAromaReverse(review.aroma);
           const isExpanded = expandedReviews[review.id] || false;
           const isModalOpen = isDeleteOpen[review.id] || false;

@@ -1,9 +1,7 @@
 import Rating from "@/components/@shared/Rating";
 import Button from "@/components/@shared/Button";
-import getWineById from "@/libs/axios/wine/getWineById";
-import { WineData } from "@/types/wines";
-import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import { WineIdDataProps } from "@/types/wines";
+import React, { useState } from "react";
 import WineReviewModal from "@/components/wines/WineReviewModal";
 
 function RatingChart({
@@ -40,36 +38,12 @@ function RatingChart({
   );
 }
 
-export default function WineRatingStats() {
+export default function WineRatingStats({data}: WineIdDataProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [data, setData] = useState<WineData | null>(null);
-  const router = useRouter();
-  const { id } = router.query;
 
   const handleModal = () => {
     setIsOpen(!isOpen);
   };
-
-  useEffect((): void => {
-    const getData = async (): Promise<void> => {
-      if (typeof id === "string") {
-        try {
-          const fetchedData = await getWineById(id);
-          setData(fetchedData);
-        } catch (e) {
-          console.error("데이터를 불러오는데 오류가 있습니다:", e);
-        }
-      }
-    };
-
-    getData();
-  }, [id]);
-
-  // 코드 리팩토링 진행 시에 로딩바 애니메이션 추가 예정
-  // 시간이 몇 초 이상 걸리면 에러 페이지로 넘기는 방법도 괜찮을듯
-  if (!data) {
-    return <div>로딩 중...</div>;
-  }
 
   const { avgRating, reviewCount, avgRatings } = data;
 

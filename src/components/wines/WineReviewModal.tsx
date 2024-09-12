@@ -36,6 +36,7 @@ export default function WineReviewModal({
   const [softAcidic, setSoftAcidic] = useState(0);
   const [aroma, setAroma] = useState<string[]>([]);
   const [content, setContent] = useState("");
+  const [error, setError] = useState("");
 
   const handleRatingChange = (value: number) => setRatingValue(value);
   const handleLightBoldChange = (value: number) => setLightBold(value);
@@ -44,9 +45,16 @@ export default function WineReviewModal({
   const handleSoftAcidicChange = (value: number) => setSoftAcidic(value);
   const handleAromaChange = (value: string[]) => setAroma(value);
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
-    setContent(e.target.value);
+  {    setContent(e.target.value);
+    setError("");
+};
 
   const handleSubmit = async () => {
+    if (!content) {
+      setError("후기를 작성해야만 리뷰를 남길 수 있습니다.");
+      return;
+    }
+
     const translatedAroma = translateAroma(aroma);
 
     const reviewData = {
@@ -174,10 +182,11 @@ export default function WineReviewModal({
         </div>
         <textarea
           placeholder="후기를 작성해 주세요"
-          className="mt-6 h-[100px] w-[327px] cursor-default rounded-2xl border border-solid border-light-gray-300 bg-light-white px-5 py-[14px] md:h-[120px] md:w-[480px]"
+          className={`${error ? "border-red-500" : "border-light-gray-300"} mt-6 h-[100px] w-[327px] cursor-default rounded-2xl border border-solid bg-light-white px-5 py-[14px] md:h-[120px] md:w-[480px]`}
           value={content}
           onChange={handleContentChange}
         />
+        {error && <p className="px-5 text-red-500">{error}</p>}
         <p className="mt-8 text-2lg-18px-bold text-light-gray-800 md:mt-10 md:text-xl-20px-bold">
           와인의 맛은 어땠나요?
         </p>
