@@ -8,6 +8,7 @@ export default function HeroImg() {
           fill
           src="/images/landing/lg_main_hero.png"
           alt="메인 히어로 이미지"
+          quality={100}
         />
       </div>
       <div className="relative block pb-[117%] md:hidden">
@@ -15,6 +16,7 @@ export default function HeroImg() {
           fill
           src="/images/landing/sm_main_hero.png"
           alt="메인 히어로 이미지"
+          quality={100}
         />
       </div>
     </section>

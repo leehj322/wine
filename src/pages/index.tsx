@@ -2,11 +2,13 @@ import Link from "next/link";
 import GlobalNavBar from "@/components/@shared/GlobalNavBar";
 import Button from "@/components/@shared/Button";
 import HeroImg from "@/components/landing/HeroImg";
-import MobileMain from "@/components/landing/MobileMain";
-import DefaultMain from "@/components/landing/DefaultMain";
 import Head from "next/head";
 import Meta from "@/components/@shared/head/Meta";
 import DEPLOY_URL from "@/constants/deployUrl";
+import {
+  DefaultMainSlide,
+  MobileMainSlide,
+} from "@/components/landing/MainSlide";
 
 export default function HomePage() {
   return (
@@ -25,8 +27,8 @@ export default function HomePage() {
         </header>
         <main className="mx-4 mt-6 max-w-[1140px] md:mx-5 xl:mx-auto xl:mb-[104px] xl:mt-20">
           <HeroImg />
-          <DefaultMain />
-          <MobileMain />
+          <DefaultMainSlide />
+          <MobileMainSlide />
           <Link href="/wines" className="mx-auto block h-[50px] w-[279px]">
             <Button
               buttonStyle="purple"
