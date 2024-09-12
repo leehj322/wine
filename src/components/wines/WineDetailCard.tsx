@@ -12,13 +12,13 @@ export default function WineDetailCard({ router, data }: WineIdDataProps) {
     <div className="mt-2.5 h-[302px] w-full pt-5 md:mt-5 md:pt-[42px]">
       <div className="relative flex h-[260px] w-full rounded-2xl border border-light-gray-300">
         <div className="flex h-full w-[244px] items-end justify-center">
-          <Image
-            className="h-4/5"
-            src={data.image}
-            alt="와인 이미지"
-            width={100}
-            height={260}
-          />
+          <div className="relative h-5/6 w-[60px]">
+            <Image
+              src={data.image}
+              alt="와인 이미지"
+              fill
+            />
+          </div>
         </div>
         <div>
           <div className="mr-5 mt-[52px] flex w-[200px] flex-col gap-5 md:h-[111px] md:w-[438px] xl:mr-0">

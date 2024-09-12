@@ -7,7 +7,6 @@ import { Router } from "next/dist/client/router"
 import { useEffect, useState } from "react";
 import { WineData } from "@/types/wines";
 import getWineById from "@/libs/axios/wine/getWineById";
-import getReviewById from "@/libs/axios/review/getReviewById";
 
 export default function WineDetailPage() {
   const [data, setData] = useState<WineData | null>(null);
@@ -27,14 +26,6 @@ export default function WineDetailPage() {
         try {
           const wineData: WineData = await getWineById(id);
           setData(wineData);
-
-          if (wineData.reviews.length > 0) {
-            wineData.reviews.map((review) =>
-              getReviewById(review.id),
-            );
-          } else {
-            console.error("리뷰 ID를 찾을 수 없습니다.");
-          }
         } catch (e) {
           console.error("데이터를 불러오는데 오류가 있습니다:", e);
         }
