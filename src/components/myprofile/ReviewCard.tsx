@@ -197,7 +197,7 @@ export default function ReviewCard({
           <div className="text-md-14px-medium text-light-gray-500 md:text-lg-16px-medium">
             {review.wine.name}
           </div>
-          <div className="text-md-14px-regular text-light-gray-800 md:text-lg-16px-regular">
+          <div className="text-start text-md-14px-regular text-light-gray-800 md:text-lg-16px-regular">
             {review.content}
           </div>
         </button>
