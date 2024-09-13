@@ -53,7 +53,7 @@ export default function ProfileCard({ user, updateMe }: ProfileCardProps) {
   return (
     <div className="h-[241px] w-[343px] rounded-[16px] border border-solid border-light-gray-300 p-[20px] md:h-[247px] md:w-[704px] md:px-[40px] md:py-[23px] xl:h-[530px] xl:w-[280px] xl:px-[20px] xl:py-[28px]">
       <div className="flex w-full flex-col items-center gap-[20px] md:gap-[30px] xl:h-full xl:w-[240px] xl:justify-between">
-        <div className="flex w-full flex-row gap-[16px] md:gap-[32px] xl:w-[164px] xl:flex-col">
+        <div className="flex w-full flex-row items-center gap-[16px] md:gap-[32px] xl:w-[164px] xl:flex-col">
           <button
             type="button"
             className="relative h-[60px] w-[60px] cursor-pointer rounded-[9999px] border border-solid border-light-gray-300 md:h-[80px] md:w-[80px] xl:h-[164px] xl:w-[164px]"
@@ -78,13 +78,13 @@ export default function ProfileCard({ user, updateMe }: ProfileCardProps) {
               className="hidden"
             />
           </button>
-          <div className="flex w-[135px] flex-col gap-[4px] md:w-[155px] md:gap-[8px] xl:items-center xl:gap-[16px]">
-            <div className="flex items-center text-xl-20px-bold text-light-gray-800 md:text-2xl-24px-bold">
+          <div className="flex w-[200px] flex-col gap-[4px] md:w-[500px] md:gap-[8px] xl:w-[155px] xl:items-center xl:gap-[16px]">
+            <h1 className="w-full truncate text-xl-20px-bold text-light-gray-800 md:text-2xl-24px-bold">
               {user.nickname}
-            </div>
-            <div className="flex items-center justify-center text-md-14px-regular text-light-gray-500 md:text-lg-16px-regular">
+            </h1>
+            <h3 className="w-full truncate text-md-14px-regular text-light-gray-500 md:text-lg-16px-regular">
               {userEmail}
-            </div>
+            </h3>
           </div>
         </div>
         <div className="flex w-full flex-col gap-[6px] md:flex-row md:gap-[24px] xl:flex-col xl:gap-[8px]">

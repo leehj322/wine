@@ -144,12 +144,12 @@ export default function WineCard({ wine, onUpdate, onDelete }: WineCardProps) {
       <div className="absolute left-[93px] right-[20px] top-[41px] z-10 flex h-[87px] w-[230px] justify-between md:left-[176px] md:right-[40px] md:top-[72px] md:h-[111px] md:w-[488px] xl:w-[584px]">
         <button
           onClick={navigateToWineDetail}
-          className="flex w-full flex-col gap-[20px]"
+          className="flex w-[200px] flex-col gap-[20px] md:w-[460px] xl:w-[550px]"
         >
-          <div className="text-[20px] font-semibold leading-[24px] text-light-gray-800 md:text-[30px] md:leading-[36px]">
+          <div className="w-full truncate text-start text-[20px] font-semibold leading-[24px] text-light-gray-800 md:text-[30px] md:leading-[36px]">
             {wine.name}
           </div>
-          <div className="text-start text-md-14px-regular text-light-gray-500 md:text-lg-16px-regular">
+          <div className="w-full truncate text-start text-md-14px-regular text-light-gray-500 md:text-lg-16px-regular">
             {wine.region}
           </div>
         </button>
