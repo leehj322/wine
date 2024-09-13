@@ -8,6 +8,7 @@ export default function HeroImg() {
           fill
           src="/images/landing/lg_main_hero.png"
           alt="메인 히어로 이미지"
+          priority
           quality={100}
         />
       </div>
@@ -16,6 +17,7 @@ export default function HeroImg() {
           fill
           src="/images/landing/sm_main_hero.png"
           alt="메인 히어로 이미지"
+          priority
           quality={100}
         />
       </div>
