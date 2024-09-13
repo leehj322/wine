@@ -16,6 +16,9 @@ export default function WineDetailPage() {
   useEffect(() => {
     const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) {
+      if (typeof id === "string") {
+        localStorage.setItem("wineId", id);
+      }
       router.replace("/signin");
     }
   }, [router]);

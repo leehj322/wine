@@ -152,7 +152,7 @@ export default function WinesReviewSection({data}: WineIdDataProps) {
                   <p className="text-xl-20px-bold text-light-gray-800">
                     정말 삭제하시겠습니까?
                   </p>
-                  <div className="flex items-center justify-between">
+                  <div className="gap-2.5 flex items-center justify-between">
                     <button
                       className="flex h-[54px] w-[156px] items-center justify-center rounded-xl border border-solid border-light-gray-300 bg-light-white px-5 py-4 text-lg-16px-bold text-light-gray-500"
                       onClick={() => handleDeleteModal(review.id)}
@@ -175,7 +175,7 @@ export default function WinesReviewSection({data}: WineIdDataProps) {
                 reviewType="patch"
                 reviewName="수정하기"
               />
-              <div className="flex justify-between">
+              <div className="w-full flex justify-between">
                 <div className="flex gap-4">
                   <Image
                     className="max-h-[50px] max-w-[50px] rounded-full object-cover md:max-h-[64px] md:max-w-[64px]"
@@ -189,7 +189,7 @@ export default function WinesReviewSection({data}: WineIdDataProps) {
                     height={64}
                   />
                   <div className="flex flex-col justify-center md:gap-1">
-                    <p className="text-lg-16px-semibold text-light-gray-800 md:text-2lg-18px-semibold">
+                    <p className="max-w-[140px] md:max-w-[480px] truncate text-lg-16px-semibold text-light-gray-800 md:text-2lg-18px-semibold">
                       {review.user.nickname}
                     </p>
                     <p className="text-md-14px-regular text-light-gray-500 md:text-lg-16px-regular">
@@ -198,7 +198,7 @@ export default function WinesReviewSection({data}: WineIdDataProps) {
                   </div>
                 </div>
                 <div
-                  className="flex h-8 w-[82px] flex-row-reverse items-start gap-[18px] md:h-[38px] md:w-[100px] md:gap-6"
+                  className="min-w-[38px] flex h-8 w-[82px] flex-row-reverse items-start gap-[18px] md:h-[38px] md:w-[100px] md:gap-6"
                 >
                   <Image
                     role="button"
