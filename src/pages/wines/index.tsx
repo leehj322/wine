@@ -3,7 +3,7 @@ import WineItemList from "@/components/wines/WineItemList";
 import WineRecommendItemList from "@/components/wines/WineRecommendItemList";
 import getWines from "@/libs/axios/wine/getWines";
 import GlobalNavBar from "@/components/@shared/GlobalNavBar";
-import { Wine, WineEnum, WineFilterProps } from "@/types/wines";
+import { Wine, WineEnum, WineFilterProps, WinePrice } from "@/types/wines";
 import React, { useEffect, useState, useRef } from "react";
 import Button from "@/components/@shared/Button";
 import Input from "@/components/@shared/Input";
@@ -15,8 +15,10 @@ import useDebounce from "@/hooks/useDebounce";
 import useIsMobile from "@/hooks/useIsMobile";
 
 export default function WineListPage() {
-  const [wineList, setWineList] = useState<Wine[]>([]);
+  const [isAddWineModalOpen, toggleIsAddWineModalOpen] = useToggle(false);
+  const [isFilterModalOpen, toggleIsFilterModalOpen] = useToggle(false);
 
+  const [wineList, setWineList] = useState<Wine[]>([]);
   const [wineFilterValue, setWineFilterValue] = useState<WineFilterProps>({
     wineType: WineEnum.Red,
     winePrice: { min: 0, max: 100000 },
@@ -24,9 +26,7 @@ export default function WineListPage() {
   });
   const [wineName, setWineName] = useState("");
   const [wineCursor, setWineCursor] = useState<number | null>(0);
-
-  const [isAddWineModalOpen, toggleIsAddWineModalOpen] = useToggle(false);
-  const [isFilterModalOpen, toggleIsFilterModalOpen] = useToggle(false);
+  const [winePriceRange, setWinePriceRange] = useState({ min: 0, max: 100000 });
 
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -70,6 +70,10 @@ export default function WineListPage() {
     setWineList([]); // 필터 변경 시 목록 초기화
     setWineCursor(0);
     setHasMore(true);
+  };
+
+  const handleWinePriceRangeChange = ({ min, max }: WinePrice) => {
+    setWinePriceRange({ min, max });
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -137,7 +141,9 @@ export default function WineListPage() {
         >
           <WineFilter
             wineFilterValue={wineFilterValue}
+            winePriceRangeValue={winePriceRange}
             onFilterChange={handleFilterChange}
+            onPriceRangeChange={handleWinePriceRangeChange}
             onClose={() => toggleIsFilterModalOpen()}
           />
         </Modal>
@@ -191,7 +197,9 @@ export default function WineListPage() {
             <div className="block flex w-[340px] flex-col gap-16">
               <WineFilter
                 wineFilterValue={wineFilterValue}
+                winePriceRangeValue={winePriceRange}
                 onFilterChange={handleFilterChange}
+                onPriceRangeChange={handleWinePriceRangeChange}
                 onClose={() => toggleIsFilterModalOpen()}
               />
 
@@ -221,9 +229,7 @@ export default function WineListPage() {
         <div
           ref={loadMoreRef}
           className={wineList.length === 0 ? "hidden" : "block h-[1px]"}
-        >
-          a
-        </div>
+        />
       </div>
     </div>
   );

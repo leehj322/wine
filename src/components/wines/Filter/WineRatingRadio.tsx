@@ -14,7 +14,7 @@ export default function WineRatingRadio({
   onChange,
 }: Props) {
   return (
-    <div className="] flex items-center gap-4">
+    <label className="] flex cursor-pointer items-center gap-4">
       <input
         type="radio"
         id="red"
@@ -30,6 +30,6 @@ export default function WineRatingRadio({
         onClick={() => onChange(value)}
       />
       <span>{children}</span>
-    </div>
+    </label>
   );
 }

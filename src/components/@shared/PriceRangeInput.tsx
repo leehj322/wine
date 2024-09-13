@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 interface PriceRangeInputProps {
-  priceGap?: number;
   minPrice: number;
   maxPrice: number;
   minValue: number;
@@ -11,7 +10,7 @@ interface PriceRangeInputProps {
 
 // const MIN_PRICE = 0;
 // const MAX_PRICE = 100000;
-const DEFAULT_PRICE_GAP = 30000;
+// const DEFAULT_PRICE_GAP = 10000;
 
 /**
  * PriceRangeInput
@@ -28,13 +27,24 @@ const DEFAULT_PRICE_GAP = 30000;
  * />
  */
 export default function PriceRangeInput({
-  priceGap = DEFAULT_PRICE_GAP,
   minPrice,
   maxPrice,
   minValue,
   maxValue,
   onPriceChange,
 }: PriceRangeInputProps) {
+  const [priceGap, setPriceGap] = useState(10000);
+
+  useEffect(() => {
+    if (minPrice === 0 && maxPrice === 100000) {
+      setPriceGap(10000);
+    } else if (minPrice === 100000 && maxPrice === 1000000) {
+      setPriceGap(100000);
+    } else {
+      setPriceGap(1000000);
+    }
+  }, [minPrice, maxPrice]);
+
   useEffect(() => {
     const progress = document.querySelector<HTMLElement>(".slider .progress");
 

@@ -5,17 +5,21 @@ import PriceRangeInput from "../../@shared/PriceRangeInput";
 import Button from "../../@shared/Button";
 import WineTypeRadio from "./WineTypeRadio";
 import WineRatingRadio from "./WineRatingRadio";
-import WinePriceRangeRadio from "./WinePrinceRangeRadio";
+import WinePriceRangeRadio from "./WinePriceRangeRadio";
 
 interface Props {
   wineFilterValue: WineFilterProps;
+  winePriceRangeValue: WinePrice;
   onFilterChange: (newFilterValue: WineFilterProps) => void;
+  onPriceRangeChange: (priceRange: WinePrice) => void;
   onClose: () => void;
 }
 
 export default function WineFilter({
   wineFilterValue,
+  winePriceRangeValue,
   onFilterChange,
+  onPriceRangeChange,
   onClose,
 }: Props) {
   const wineTypes = [
@@ -30,8 +34,8 @@ export default function WineFilter({
   });
 
   const [wineSelectedPriceRange, setWineSelectedPriceRange] = useState({
-    min: 0,
-    max: 100000,
+    min: winePriceRangeValue.min,
+    max: winePriceRangeValue.max,
   });
 
   const debouncedWinePrice = useDebounce(winePrice, 300);
@@ -45,14 +49,16 @@ export default function WineFilter({
   ];
 
   const winePriceRanges = [
-    { id: 0, min: 0, max: 100000, label: "0원 ~10만원" },
-    { id: 1, min: 100000, max: 1000000, label: "10만원 ~100만원" },
-    { id: 2, min: 1000000, max: 10000000, label: "10만원 ~1000만원" },
+    { id: 0, min: 0, max: 100000, label: "0원 ~ 10만원" },
+    { id: 1, min: 100000, max: 1000000, label: "10만원 ~ 100만원" },
+    { id: 2, min: 1000000, max: 10000000, label: "100만원 ~ 1000만원" },
   ];
 
   const handleWineRangeChange = ({ min, max }: WinePrice) => {
     setWineSelectedPriceRange({ min, max });
     setWinePrice({ min, max }); // winePrice 상태 업데이트
+
+    onPriceRangeChange({ min, max });
   };
 
   const handleWineTypeChange = (value: WineEnum) => {
@@ -138,7 +144,6 @@ export default function WineFilter({
         </div>
 
         <PriceRangeInput
-          priceGap={10000}
           onPriceChange={handlePriceChange}
           minPrice={wineSelectedPriceRange.min}
           maxPrice={wineSelectedPriceRange.max}

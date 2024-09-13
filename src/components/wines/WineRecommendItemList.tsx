@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Wine } from "@/types/wines";
 import Link from "next/link";
 import getWineRecommends from "@/libs/axios/wine/getWineRecommends";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, TouchEvent } from "react";
 import MEDIA_QUERY_BREAK_POINT from "@/constants/mediaQueryBreakPoint";
 import Rating from "../@shared/Rating";
 
@@ -120,13 +120,34 @@ export default function WineRecommendItemList() {
     }
   };
 
+  // touch slide handler (터치시에 좌측 혹은 우측 스크롤)
+  const [touchLocationX, setTouchLocationX] = useState(0);
+
+  const handleTouchStart = (e: TouchEvent) => {
+    setTouchLocationX(e.changedTouches[0].pageX);
+  };
+
+  const handleTouchEnd = (e: TouchEvent) => {
+    const distanceX = touchLocationX - e.changedTouches[0].pageX;
+
+    if (distanceX >= 80) {
+      handleClick("right");
+    } else if (distanceX <= -80) {
+      handleClick("left");
+    }
+  };
+
   return (
     <div className="flex h-[299px] w-full flex-col rounded-2xl bg-light-gray-100">
       <div className="flex flex-col gap-6 py-4">
         <span className="px-6 text-xl-20px-bold text-light-gray-800">
           이번 달 추천 와인
         </span>
-        <div className="relative">
+        <div
+          className="relative"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
           {hasWineButtons.isLeftBtnVisible && (
             <button
               type="button"

@@ -113,7 +113,7 @@ export default function MyProfilePage() {
             setReviewData={setReviewData}
             fetchData={() => fetchData("reviews")}
           />
-          {loading && <div className="hidden">로딩 중...</div>}
+          {loading && <div style={{ display: "none" }}>로딩 중...</div>}
           <div id="load-more-trigger" className="h-px" />
         </>
       );
@@ -126,7 +126,7 @@ export default function MyProfilePage() {
             setWineData={setWineData}
             fetchData={() => fetchData("wines")}
           />
-          {loading && <div className="hidden">로딩 중...</div>}
+          {loading && <div style={{ display: "none" }}>로딩 중...</div>}
           <div id="load-more-trigger" className="h-px" />
         </>
       );

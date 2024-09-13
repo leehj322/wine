@@ -17,7 +17,7 @@ export default function WinePriceRangeRadio({
   const isSelected =
     selectedValue?.min === value.min && selectedValue?.max === value.max;
   return (
-    <div className="flex items-center gap-4">
+    <label className="flex cursor-pointer items-center gap-4">
       <input
         type="radio"
         id="red"
@@ -33,6 +33,6 @@ export default function WinePriceRangeRadio({
         onClick={() => onChange({ min: value.min, max: value.max })}
       />
       <span>{children}</span>
-    </div>
+    </label>
   );
 }
