@@ -38,9 +38,10 @@ export default function SignInPage() {
   const buttonType = isFormValid ? "purple" : "gray";
 
   useEffect(() => {
-    if (!localStorage.getItem("wineId")) return;
-    setRedirectionPath(`/wines/${localStorage.getItem("wineId")}`);
-    localStorage.removeItem("wineId");
+    const storedPath = localStorage.getItem("redirectionPath");
+    if (!storedPath) return;
+    setRedirectionPath(storedPath);
+    localStorage.removeItem("redirectionPath");
   }, []);
 
   useEffect(() => {
@@ -48,7 +49,7 @@ export default function SignInPage() {
   }, [authForm.email, authForm.password]);
 
   useEffect(() => {
-    if (user) router.push(redirectionPath);
+    if (user) router.replace(redirectionPath);
   }, [user]);
 
   return (

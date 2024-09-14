@@ -3,25 +3,17 @@ import WineDetailCard from "@/components/wines/WineDetailCard";
 import WinesReviewSection from "@/components/wines/WinesReviewSection";
 import WineRatingStats from "@/components/wines/WineRatingStats";
 import { useRouter } from "next/router";
-import { Router } from "next/dist/client/router"
+import { Router } from "next/dist/client/router";
 import { useEffect, useState } from "react";
 import { WineData } from "@/types/wines";
 import getWineById from "@/libs/axios/wine/getWineById";
+import { useAuth } from "@/contexts/AuthProvider";
 
 export default function WineDetailPage() {
   const [data, setData] = useState<WineData | null>(null);
   const router = useRouter() as Router;
   const { id } = router.query;
-
-  useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
-    if (!accessToken) {
-      if (typeof id === "string") {
-        localStorage.setItem("wineId", id);
-      }
-      router.replace("/signin");
-    }
-  }, [router]);
+  useAuth(true);
 
   useEffect(() => {
     const getData = async () => {
@@ -45,10 +37,10 @@ export default function WineDetailPage() {
   }
 
   return (
-    <div className="relative xl:mx-auto mb-40 mt-10 mx-10 xl:w-[1140px]">
+    <div className="relative mx-10 mb-40 mt-10 xl:mx-auto xl:w-[1140px]">
       <GlobalNavBar />
-      <WineDetailCard router={router} data={data}/>
-      <WineRatingStats data={data}/>
+      <WineDetailCard router={router} data={data} />
+      <WineRatingStats data={data} />
       <WinesReviewSection data={data} />
     </div>
   );

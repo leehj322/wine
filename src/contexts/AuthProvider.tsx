@@ -151,8 +151,8 @@ export function useAuth(required?: boolean) {
   const router = useRouter();
   useEffect(() => {
     if (required && !context.user && !context.isPending) {
-      alert("로그인이 필요한 페이지입니다.");
-      router.push("/signin");
+      localStorage.setItem("redirectionPath", router.asPath);
+      router.replace("/signin");
     }
   }, [required, context.user, context.isPending]);
 
