@@ -265,7 +265,7 @@ export default function WinesReviewSection({data}: WineIdDataProps) {
                 </div>
               </div>
               <p
-                className={`mt-6 text-md-14px-regular text-light-gray-800 md:text-lg-16px-regular ${isExpanded ? "" : "hidden"}`}
+                className={`text-ellipsis overflow-hidden mt-6 text-md-14px-regular text-light-gray-800 md:text-lg-16px-regular ${isExpanded ? "" : "hidden"}`}
               >
                 {review.content}
               </p>
