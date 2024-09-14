@@ -21,10 +21,10 @@ function WineItemCard({ wine }: WineProps) {
 
   useEffect(() => {
     const handleResize = () => {
+      setDisplayName(
+        wine.name.length > 25 ? `${wine.name.slice(0, 25)}...` : wine.name,
+      );
       if (window.innerWidth < MEDIA_QUERY_BREAK_POINT.TABLET_MIN_WIDTH) {
-        setDisplayName(
-          wine.name.length > 25 ? `${wine.name.slice(0, 25)}...` : wine.name,
-        );
         if (wine.recentReview?.content) {
           setWineDisplayRecentReview(
             wine.recentReview?.content.length > 80
@@ -32,17 +32,12 @@ function WineItemCard({ wine }: WineProps) {
               : wine.recentReview.content,
           );
         }
-      } else {
-        setDisplayName(
-          wine.name.length > 20 ? `${wine.name.slice(0, 20)}...` : wine.name,
+      } else if (wine.recentReview?.content) {
+        setWineDisplayRecentReview(
+          wine.recentReview?.content.length > 160
+            ? `${wine.recentReview?.content.slice(0, 160)}...`
+            : wine.recentReview.content,
         );
-        if (wine.recentReview?.content) {
-          setWineDisplayRecentReview(
-            wine.recentReview?.content.length > 160
-              ? `${wine.recentReview?.content.slice(0, 160)}...`
-              : wine.recentReview.content,
-          );
-        }
       }
     };
 
@@ -66,10 +61,10 @@ function WineItemCard({ wine }: WineProps) {
         <div className="flex w-4/5 flex-row justify-between py-9 max-md:flex-col max-md:justify-around max-md:py-6">
           <div className="flex w-full flex-row justify-between max-md:flex-col max-md:gap-2">
             <div className="flex w-3/5 flex-col gap-2 max-md:w-full max-md:gap-0">
-              <p className="text-3xl-32px-semibold text-light-gray-800 max-md:text-xl-20px-semibold">
+              <p className="overflow-hidden text-ellipsis text-3xl-32px-semibold text-light-gray-800 max-md:text-xl-20px-semibold">
                 {displayName}
               </p>
-              <p className="text-lg-16px-regular text-light-gray-500">
+              <p className="overflow-hidden text-ellipsis text-lg-16px-regular text-light-gray-500">
                 {wine.region}
               </p>
               <div className="flex h-[42px] w-fit items-center justify-center rounded-xl bg-light-purple-10 px-4">
@@ -117,7 +112,7 @@ function WineItemCard({ wine }: WineProps) {
 
       <div className="flex flex-col gap-1 p-5 max-md:pt-2">
         <p className="text-lg-16px-semibold text-light-gray-800">최신후기</p>
-        <p className="text-lg-16px-regular text-light-gray-500">
+        <p className="overflow-hidden text-ellipsis text-lg-16px-regular text-light-gray-500">
           {wine.recentReview?.content
             ? `${displayWineRecentReview}`
             : "작성된 후기가 없습니다."}

@@ -49,7 +49,7 @@ export default function AddWine({ onClose, onAddWine }: Props) {
     }
 
     if (id === "price") {
-      if (Number(value) > 10000000) {
+      if (Number(value) < 0 || Number(value) > 10000000) {
         setTextError((prev) => ({ ...prev, price: true }));
         return;
       }
@@ -177,7 +177,7 @@ export default function AddWine({ onClose, onAddWine }: Props) {
                 />
                 {textError.price && (
                   <span className="absolute top-12 pl-2 text-xs-12px-medium text-red-500 max-md:top-10">
-                    와인 가격은 최대 1000만원까지 입력할 수 있습니다.
+                    와인 가격은 0원 부터 1000만원까지 입력할 수 있습니다.
                   </span>
                 )}
               </div>
