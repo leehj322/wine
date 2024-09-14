@@ -197,7 +197,7 @@ export default function ReviewCard({
           <div className="text-md-14px-medium text-light-gray-500 md:text-lg-16px-medium">
             {review.wine.name}
           </div>
-          <div className="text-start text-md-14px-regular text-light-gray-800 md:text-lg-16px-regular">
+          <div className="w-[300px] break-words text-start text-md-14px-regular text-light-gray-800 md:w-[620px] md:text-lg-16px-regular xl:w-[720px]">
             {review.content}
           </div>
         </button>
@@ -228,7 +228,7 @@ export default function ReviewCard({
               </div>
               <div className="flex flex-col gap-[8px]">
                 <div className="text-lg-16px-bold text-light-gray-800 md:text-2lg-18px-semibold">
-                  Sentinel Carbernet Sauvignon 2016
+                  {review.wine.name}
                 </div>
                 <RatingInput
                   rating={ratingValue}

@@ -79,10 +79,10 @@ export default function ProfileCard({ user, updateMe }: ProfileCardProps) {
             />
           </button>
           <div className="flex w-[200px] flex-col gap-[4px] md:w-[500px] md:gap-[8px] xl:w-[155px] xl:items-center xl:gap-[16px]">
-            <h1 className="w-full truncate text-xl-20px-bold text-light-gray-800 md:text-2xl-24px-bold">
+            <h1 className="w-full truncate text-center text-xl-20px-bold text-light-gray-800 md:text-2xl-24px-bold">
               {user.nickname}
             </h1>
-            <h3 className="w-full truncate text-md-14px-regular text-light-gray-500 md:text-lg-16px-regular">
+            <h3 className="w-full truncate text-center text-md-14px-regular text-light-gray-500 md:text-lg-16px-regular">
               {userEmail}
             </h3>
           </div>
