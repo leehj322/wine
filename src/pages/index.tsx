@@ -1,23 +1,45 @@
 import Link from "next/link";
+import GlobalNavBar from "@/components/@shared/GlobalNavBar";
+import Button from "@/components/@shared/Button";
+import HeroImg from "@/components/landing/HeroImg";
+import Head from "next/head";
+import Meta from "@/components/@shared/head/Meta";
+import DEPLOY_URL from "@/constants/deployUrl";
+import {
+  DefaultMainSlide,
+  MobileMainSlide,
+} from "@/components/landing/MainSlide";
 
 export default function HomePage() {
   return (
-    <div>
-      <h1 className="bg-light-default text-4xl">홈페이지</h1>
-      <Link href="/myprofile">내 프로필 페이지</Link>
-      <br />
-      <Link href="/signin">로그인 페이지</Link>
-      <br />
-      <Link href="/signup">회원가입 페이지</Link>
-      <br />
-      <Link href="/wines">와인 목록 페이지</Link>
-      <br />
-      <Link href="/wines/1">와인 상세 페이지</Link>
-      <br />
-      <Link href="/oauth/signup/google">구글 간편 회원가입 페이지</Link>
-      <br />
-      <Link href="/oauth/signup/kakao">카카오 간편 회원가입 페이지</Link>
-      <br />
-    </div>
+    <>
+      <Head>
+        <title>WINE</title>
+        <Meta
+          url={DEPLOY_URL}
+          title="WINE - 나만의 와인창고"
+          description="한 곳에서 관리하는 나만의 와인창고"
+        />
+      </Head>
+      <div className="bg-light-default pb-20 pt-6">
+        <header className="mx-4 max-w-[1140px] md:mx-5 xl:mx-auto">
+          <GlobalNavBar />
+        </header>
+        <main className="mx-4 mt-6 max-w-[1140px] md:mx-5 xl:mx-auto xl:mb-[104px] xl:mt-20">
+          <HeroImg />
+          <DefaultMainSlide />
+          <MobileMainSlide />
+          <Link href="/wines" className="mx-auto block h-[50px] w-[279px]">
+            <Button
+              buttonStyle="purple"
+              shape="pill"
+              customStyle="text-lg-16px-bold"
+            >
+              와인 보러가기
+            </Button>
+          </Link>
+        </main>
+      </div>
+    </>
   );
 }
